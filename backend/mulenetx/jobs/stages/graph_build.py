@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from mulenetx.core.runtime import Runtime
 from mulenetx.db.models.canonical import Transaction
 from mulenetx.db.models.pipeline import IngestionRun, PipelineRun
-from mulenetx.graph.service import GraphService, GraphValidationMismatchError, operational_snapshot_id
+from mulenetx.graph.service import GraphService, GraphValidationMismatchError
 from mulenetx.jobs.runner import JobFailedError
 from mulenetx.jobs.stages.base import Stage, StageContext, StageOutcome
 
@@ -26,15 +26,19 @@ class GraphBuildStage(Stage):
     def execute(self, ctx: StageContext) -> StageOutcome:
         run = ctx.load_run()
         with ctx.runtime.session_factory() as session:
-            cutoff = session.execute(
+            bound = session.execute(
                 select(func.max(Transaction.timestamp)).where(Transaction.dataset_id == ctx.dataset_id)
             ).scalar_one()
-        if cutoff is None:
+        if bound is None:
             raise JobFailedError("PIPELINE_PREREQUISITE_MISSING", "the dataset has no accepted transactions")
         assert run.ingestion_run_id is not None
-        snapshot_id = run.graph_snapshot_id or operational_snapshot_id(ctx.dataset_id, cutoff)
         service = GraphService(ctx.runtime)
-        service.create_snapshot_row(snapshot_id, ctx.dataset_id, run.ingestion_run_id, "OPERATIONAL", cutoff)
+        if run.graph_snapshot_id is not None:
+            snapshot_id = run.graph_snapshot_id
+        else:
+            snap = service.prepare_snapshot(ctx.dataset_id, run.ingestion_run_id, "OPERATIONAL", bound)
+            assert snap is not None
+            snapshot_id = snap.graph_snapshot_id
         ctx.set_once("graph_snapshot_id", snapshot_id)
         try:
             service.build_and_validate(snapshot_id, ctx.check)

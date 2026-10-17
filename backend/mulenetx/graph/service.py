@@ -42,6 +42,23 @@ class GraphService:
     def __init__(self, runtime: Runtime) -> None:
         self.rt = runtime
 
+    def prepare_snapshot(
+        self, dataset_id: uuid.UUID, ingestion_run_id: uuid.UUID, purpose: str, bound: datetime
+    ) -> GraphSnapshot | None:
+        """The snapshot of all transactions with timestamp ≤ `bound`: data_cutoff = their maximum timestamp
+        (§3.4 rule 2); ID derived from content (OQ-37). None if there is no such transaction."""
+        with self.rt.session_factory() as db:
+            cutoff = db.execute(
+                select(func.max(Transaction.timestamp)).where(
+                    Transaction.dataset_id == dataset_id, Transaction.timestamp <= bound
+                )
+            ).scalar_one()
+        if cutoff is None:
+            return None
+        return self.create_snapshot_row(
+            snapshot_id_for(dataset_id, purpose, cutoff), dataset_id, ingestion_run_id, purpose, cutoff
+        )
+
     def create_snapshot_row(
         self,
         snapshot_id: uuid.UUID,
