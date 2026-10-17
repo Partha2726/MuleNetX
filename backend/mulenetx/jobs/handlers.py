@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from mulenetx.jobs.pipeline_handler import PipelineStageHandler
 from mulenetx.jobs.runner import Handler
 
 
 def build_handlers() -> dict[str, Handler]:
-    return {}
+    pipeline = PipelineStageHandler()
+    return {"INGEST": pipeline, "PIPELINE_STAGE": pipeline, "TRAIN": pipeline}

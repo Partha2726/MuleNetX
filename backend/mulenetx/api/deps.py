@@ -17,6 +17,7 @@ from mulenetx.core import error_codes as ec
 from mulenetx.core.errors import AppError
 from mulenetx.core.logging import user_id_var
 from mulenetx.core.runtime import Runtime
+from mulenetx.jobs.service import JobService
 
 
 @dataclass
@@ -41,6 +42,11 @@ class Services:
         result: AuthService = self._get(
             "auth", lambda: AuthService(self.runtime.settings, self.audit, Passwords(self.runtime.settings))
         )
+        return result
+
+    @property
+    def jobs(self) -> JobService:
+        result: JobService = self._get("jobs", lambda: JobService(self.runtime.settings, self.audit))
         return result
 
 

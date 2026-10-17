@@ -33,4 +33,12 @@ ENDPOINTS: list[Endpoint] = [
     Endpoint("POST", "/api/v1/users", "user.manage", {"username": "x-user", "role": "ANALYST", "password": "p" * 16}),
     Endpoint("PATCH", "/api/v1/users/{id}", "user.manage", {"is_active": True}),
     Endpoint("PATCH", "/api/v1/users/{id}", "role.manage", {"role": "ANALYST"}, also=("user.manage",)),
+    Endpoint("GET", "/api/v1/pipeline-runs", "pipeline.read"),
+    Endpoint("GET", "/api/v1/pipeline-runs/{id}", "pipeline.read"),
+    Endpoint("POST", "/api/v1/pipeline-runs", "pipeline.control", {"dataset_id": PLACEHOLDER}),
+    Endpoint("POST", "/api/v1/pipeline-runs/{id}/retry", "pipeline.control"),
+    Endpoint("GET", "/api/v1/models", "model.read"),
+    Endpoint("GET", "/api/v1/models/{version}", "model.read"),
+    Endpoint("GET", "/api/v1/context", "account.read"),
+    Endpoint("POST", "/api/v1/ingestion/{id}/retry", "pipeline.control"),
 ]

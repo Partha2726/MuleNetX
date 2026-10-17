@@ -27,9 +27,7 @@ def community_id(graph_snapshot_id: uuid.UUID | str, analytics_version: str, mem
     return str(_uuid5(content))
 
 
-def candidate_id(
-    graph_snapshot_id: uuid.UUID | str, scoring_run_id: uuid.UUID | str, community_id: str
-) -> uuid.UUID:
+def candidate_id(graph_snapshot_id: uuid.UUID | str, scoring_run_id: uuid.UUID | str, community_id: str) -> uuid.UUID:
     """`candidate|{graph_snapshot_id}|{scoring_run_id}|{community_id}`; also the ring_id."""
     return _uuid5(f"candidate|{graph_snapshot_id}|{scoring_run_id}|{community_id}")
 
