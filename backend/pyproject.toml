@@ -76,3 +76,7 @@ markers = [
     "perf: benchmark harness",
     "e2e: end-to-end golden path",
 ]
+
+[tool.ruff.lint.isort]
+known-third-party = ["alembic"]
+known-first-party = ["mulenetx", "tests"]
