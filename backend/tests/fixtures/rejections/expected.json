@@ -1,0 +1,12 @@
+{
+  "description": "One row per rejection code of SRS §7.3 plus three valid rows (ordinals 1, 10, 11). Hand-computed.",
+  "records_seen": 11,
+  "records_accepted": 3,
+  "records_rejected": 8,
+  "counts": {"MISSING_COLUMN": 1, "TYPE_ERROR": 1, "INVALID_ACCOUNT_ID": 1, "INVALID_AMOUNT": 1, "INVALID_TIMESTAMP": 1, "INVALID_TYPE": 1, "INVALID_LABEL": 1, "FIELD_TOO_LONG": 1},
+  "samples": {"MISSING_COLUMN": [2], "TYPE_ERROR": [3], "INVALID_ACCOUNT_ID": [4], "INVALID_AMOUNT": [5], "INVALID_TIMESTAMP": [6], "INVALID_TYPE": [7], "INVALID_LABEL": [8], "FIELD_TOO_LONG": [9]},
+  "accepted_refs": ["0000000001", "0000000010", "0000000011"],
+  "accounts": {"C1": "CUSTOMER", "C2": "CUSTOMER", "C3": "CUSTOMER", "M3": "MERCHANT"},
+  "amounts": {"0000000001": "100.000000", "0000000010": "9.123457", "0000000011": "0.000000"},
+  "fraud": {"0000000001": false, "0000000010": true, "0000000011": false}
+}

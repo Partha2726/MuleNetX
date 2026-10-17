@@ -1,0 +1,9 @@
+{
+  "description": "A -> B -> C, one transaction per hop (SRS §27.4). Expected values computed by hand from SRS §6.2, §7.1.1, §8.3.",
+  "ingestion": {"records_seen": 2, "records_accepted": 2, "records_rejected": 0, "records_duplicate": 0},
+  "accounts": ["CA", "CB", "CC"],
+  "transactions": [
+    {"ref": "0000000001", "source": "CA", "destination": "CB", "amount": "100.000000", "timestamp": "2020-01-01T01:00:00Z", "type": "TRANSFER", "fraud_label": false},
+    {"ref": "0000000002", "source": "CB", "destination": "CC", "amount": "50.000000", "timestamp": "2020-01-01T02:00:00Z", "type": "TRANSFER", "fraud_label": false}
+  ]
+}
