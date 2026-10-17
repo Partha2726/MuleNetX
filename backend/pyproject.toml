@@ -42,7 +42,7 @@ build-backend = "hatchling.build"
 packages = ["mulenetx"]
 
 [tool.ruff]
-line-length = 110
+line-length = 120
 target-version = "py312"
 extend-exclude = ["alembic/versions"]
 
@@ -51,7 +51,7 @@ select = ["E", "F", "I", "B", "UP", "S"]
 ignore = ["S101"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106", "S311", "S603", "S607", "S608", "B017"]
+"tests/**" = ["S101", "S105", "S106", "S108", "S311", "S603", "S607", "S608", "B017"]
 "alembic/**" = ["S608"]
 
 [tool.mypy]
