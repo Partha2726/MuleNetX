@@ -96,6 +96,15 @@ class Settings(BaseSettings):
     analytic_max_depth: int = 5
     analytic_max_paths: int = 10_000
     analytic_max_expansions: int = 1_000_000
+    split_percentile_train: float = Field(default=0.70, gt=0, lt=1)
+    split_percentile_val: float = Field(default=0.85, gt=0, lt=1)
+    xgb_n_estimators: int = 300
+    xgb_max_depth: int = 6
+    xgb_learning_rate: float = 0.05
+    xgb_subsample: float = 0.8
+    xgb_colsample_bytree: float = 0.8
+    xgb_random_seed: int = 42
+    xgb_nthread: int = 1
     k_max: int = Field(default=3, ge=1, le=3)
     intervention_max_candidates: int = 5_000
 

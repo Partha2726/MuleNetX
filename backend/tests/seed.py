@@ -29,6 +29,7 @@ def seed_dataset(
     edges: list[tuple[str, str, float, int]],
     key: str = "fx",
     fraud: set[int] | None = None,
+    unlabelled: set[int] | None = None,
 ) -> SeededDataset:
     """edges: (source_ref, destination_ref, amount, step). Creates a SUCCEEDED ingestion of these rows."""
     dataset_id, ingestion_id = uuid.uuid4(), uuid.uuid4()
@@ -91,7 +92,7 @@ def seed_dataset(
                     amount=Decimal(str(amount)),
                     timestamp=ANCHOR + timedelta(hours=step),
                     transaction_type="TRANSFER",
-                    fraud_label=(i in (fraud or set())),
+                    fraud_label=None if i in (unlabelled or set()) else (i in (fraud or set())),
                     source_record_hash=hashlib.sha256(ref.encode()).hexdigest(),
                 )
             )
