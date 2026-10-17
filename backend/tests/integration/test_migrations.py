@@ -49,3 +49,10 @@ def test_active_context_singleton_inserted() -> None:
     dbutil.upgrade(dbutil.owner_dsn(DB))
     with psycopg.connect(dbutil.owner_dsn(DB, driver=False)) as conn:
         assert conn.execute("SELECT count(*), bool_and(singleton) FROM active_context").fetchone() == (1, True)
+
+
+def test_schema_matches_srs_for_all_36_tables() -> None:
+    dbutil.create_fresh_database(DB)
+    dbutil.upgrade(dbutil.owner_dsn(DB))
+    assert len(schema_check.parse_srs()) == 36
+    assert schema_check.check(dbutil.owner_dsn(DB)) == []
