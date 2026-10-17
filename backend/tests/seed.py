@@ -30,6 +30,7 @@ def seed_dataset(
     key: str = "fx",
     fraud: set[int] | None = None,
     unlabelled: set[int] | None = None,
+    types: list[str] | None = None,
 ) -> SeededDataset:
     """edges: (source_ref, destination_ref, amount, step). Creates a SUCCEEDED ingestion of these rows."""
     dataset_id, ingestion_id = uuid.uuid4(), uuid.uuid4()
@@ -91,7 +92,7 @@ def seed_dataset(
                     destination_account_id=f"{key}:{dst}",
                     amount=Decimal(str(amount)),
                     timestamp=ANCHOR + timedelta(hours=step),
-                    transaction_type="TRANSFER",
+                    transaction_type="TRANSFER" if types is None else types[i - 1],
                     fraud_label=None if i in (unlabelled or set()) else (i in (fraud or set())),
                     source_record_hash=hashlib.sha256(ref.encode()).hexdigest(),
                 )

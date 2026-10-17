@@ -20,14 +20,16 @@ def test_AT_ANALYTICS_02_louvain_identical(app, client, users) -> None:
     seed_and_activate(app, client, admin, _fixed_graph(), key="an2")
     rt = get_services(_Req(app)).runtime
     with rt.session_factory() as db:
-        snap = db.query(GraphSnapshot).one()
+        snap = db.query(GraphSnapshot).filter(GraphSnapshot.purpose == "OPERATIONAL").one()
     AnalyticsService(rt).run(snap.graph_snapshot_id, snap.dataset_id, snap.data_cutoff)
     with rt.engine.connect() as conn:
         rows = conn.execute(
             text(
                 "SELECT cm.analytics_run_id, cm.community_id, cm.account_id, ar.analytics_version "
-                "FROM community_memberships cm JOIN analytics_runs ar USING (analytics_run_id)"
-            )
+                "FROM community_memberships cm JOIN analytics_runs ar USING (analytics_run_id) "
+                "WHERE ar.graph_snapshot_id = :s"
+            ),
+            {"s": snap.graph_snapshot_id},
         ).all()
     runs = sorted({r.analytics_run_id for r in rows})
     assert len(runs) == 2

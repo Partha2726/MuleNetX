@@ -19,7 +19,7 @@ def test_AT_GRAPH_01_build_matches_canonical(app, client, users) -> None:
     key = body["dataset_key"]
     rt = get_services(_Req(app)).runtime
     with rt.session_factory() as db:
-        snap = db.execute(select(GraphSnapshot)).scalar_one()
+        snap = db.execute(select(GraphSnapshot).where(GraphSnapshot.purpose == "OPERATIONAL")).scalar_one()
     assert snap.status == "READY" and snap.purpose == "OPERATIONAL"
     assert snap.node_count == 5 and snap.edge_count == 2 and snap.source_record_count == 2
     assert snap.data_cutoff.isoformat() == "2020-01-01T02:00:00+00:00"

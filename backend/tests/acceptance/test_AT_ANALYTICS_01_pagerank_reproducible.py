@@ -29,16 +29,21 @@ def test_AT_ANALYTICS_01_pagerank_reproducible(app, client, users) -> None:
     seed_and_activate(app, client, admin, _fixed_graph(), key="an1")
     rt = get_services(_Req(app)).runtime
     with rt.session_factory() as db:
-        snap = db.query(GraphSnapshot).one()
+        snap = db.query(GraphSnapshot).filter(GraphSnapshot.purpose == "OPERATIONAL").one()
     second = AnalyticsService(rt).run(snap.graph_snapshot_id, snap.dataset_id, snap.data_cutoff)
     with rt.engine.connect() as conn:
         rows = conn.execute(
             text(
-                "SELECT analytics_run_id, account_id, pagerank_raw, pagerank_norm, betweenness_raw "
-                "FROM account_graph_metrics ORDER BY account_id, analytics_run_id"
-            )
+                "SELECT m.analytics_run_id, m.account_id, m.pagerank_raw, m.pagerank_norm, m.betweenness_raw "
+                "FROM account_graph_metrics m JOIN analytics_runs r USING (analytics_run_id) "
+                "WHERE r.graph_snapshot_id = :s ORDER BY m.account_id, m.analytics_run_id"
+            ),
+            {"s": snap.graph_snapshot_id},
         ).all()
-        config = conn.execute(text("SELECT algorithm_configuration, analytics_version FROM analytics_runs")).all()
+        config = conn.execute(
+            text("SELECT algorithm_configuration, analytics_version FROM analytics_runs WHERE graph_snapshot_id = :s"),
+            {"s": snap.graph_snapshot_id},
+        ).all()
     runs = sorted({r.analytics_run_id for r in rows})
     assert len(runs) == 2 and second.analytics_run_id in runs
     by_run = {run: {r.account_id: r for r in rows if r.analytics_run_id == run} for run in runs}

@@ -29,7 +29,7 @@ def test_validation_mismatch_fails_snapshot(app, client, users, monkeypatch: pyt
     assert run["failure_category"] == "GRAPH_VALIDATION_MISMATCH"
     assert run["resumable_from"] == "GRAPH_BUILDING"
     with rt.session_factory() as db:
-        snap = db.execute(select(GraphSnapshot)).scalar_one()
+        snap = db.execute(select(GraphSnapshot).where(GraphSnapshot.purpose == "OPERATIONAL")).scalar_one()
         assert snap.status == "FAILED" and snap.validation_digest is None
         assert db.execute(select(ActiveContext)).scalar_one().graph_snapshot_id is None
 
@@ -42,7 +42,7 @@ def test_retire_deletes_neo4j_data(app, client, users) -> None:
     upload(client, admin, fixture_csv("abc_chain"), name="retire")
     run_worker(app)
     with rt.session_factory() as db:
-        snap = db.execute(select(GraphSnapshot)).scalar_one()
+        snap = db.execute(select(GraphSnapshot).where(GraphSnapshot.purpose == "OPERATIONAL")).scalar_one()
     GraphService(rt).retire(snap.graph_snapshot_id)
     left = rt.graph.run("MATCH (n {snapshot_id:$s}) RETURN count(n) AS n", {"s": str(snap.graph_snapshot_id)})
     assert left[0]["n"] == 0

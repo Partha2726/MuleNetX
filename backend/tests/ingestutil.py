@@ -71,3 +71,18 @@ def seed_and_activate(
     run = client.get(f"/api/v1/pipeline-runs/{resp.json()['pipeline_run_id']}", headers=admin.headers).json()
     assert run["current_state"] == "READY", run
     return ds
+
+
+def seed_synth_and_activate(app: FastAPI, client: TestClient, admin: Actor, key: str = "syn", **kwargs: Any) -> Any:
+    """Seed the synthetic labelled dataset (tests/synth.py) and run the full pipeline to READY."""
+    from tests.seed import seed_dataset
+    from tests.synth import generate
+
+    edges, fraud, types = generate(**kwargs)
+    ds = seed_dataset(get_services(_Req(app)).runtime, edges, key=key, fraud=fraud, types=types)
+    resp = client.post("/api/v1/pipeline-runs", json={"dataset_id": str(ds.dataset_id)}, headers=admin.headers)
+    assert resp.status_code == 202, resp.text
+    run_worker(app, timeout=600)
+    run = client.get(f"/api/v1/pipeline-runs/{resp.json()['pipeline_run_id']}", headers=admin.headers).json()
+    assert run["current_state"] == "READY", run
+    return ds, run

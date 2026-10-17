@@ -105,6 +105,16 @@ class Settings(BaseSettings):
     xgb_colsample_bytree: float = 0.8
     xgb_random_seed: int = 42
     xgb_nthread: int = 1
+    risk_weight_ml: str = "0.50"
+    risk_weight_graph: str = "0.20"
+    risk_weight_behavioral: str = "0.15"
+    risk_weight_propagation: str = "0.10"
+    risk_weight_rules: str = "0.05"
+    risk_tier_medium: str = "0.25"
+    risk_tier_high: str = "0.50"
+    risk_tier_critical: str = "0.75"
+    candidate_threshold: str = "0.50"
+    ring_candidate_threshold: str = "0.70"
     k_max: int = Field(default=3, ge=1, le=3)
     intervention_max_candidates: int = 5_000
 
