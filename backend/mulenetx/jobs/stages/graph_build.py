@@ -3,15 +3,13 @@ dataset's maximum transaction timestamp)."""
 
 from __future__ import annotations
 
-import uuid
-
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from mulenetx.core.runtime import Runtime
 from mulenetx.db.models.canonical import Transaction
 from mulenetx.db.models.pipeline import IngestionRun, PipelineRun
-from mulenetx.graph.service import GraphService, GraphValidationMismatchError
+from mulenetx.graph.service import GraphService, GraphValidationMismatchError, operational_snapshot_id
 from mulenetx.jobs.runner import JobFailedError
 from mulenetx.jobs.stages.base import Stage, StageContext, StageOutcome
 
@@ -27,7 +25,6 @@ class GraphBuildStage(Stage):
 
     def execute(self, ctx: StageContext) -> StageOutcome:
         run = ctx.load_run()
-        snapshot_id = run.graph_snapshot_id or uuid.uuid4()
         with ctx.runtime.session_factory() as session:
             cutoff = session.execute(
                 select(func.max(Transaction.timestamp)).where(Transaction.dataset_id == ctx.dataset_id)
@@ -35,6 +32,7 @@ class GraphBuildStage(Stage):
         if cutoff is None:
             raise JobFailedError("PIPELINE_PREREQUISITE_MISSING", "the dataset has no accepted transactions")
         assert run.ingestion_run_id is not None
+        snapshot_id = run.graph_snapshot_id or operational_snapshot_id(ctx.dataset_id, cutoff)
         service = GraphService(ctx.runtime)
         service.create_snapshot_row(snapshot_id, ctx.dataset_id, run.ingestion_run_id, "OPERATIONAL", cutoff)
         ctx.set_once("graph_snapshot_id", snapshot_id)

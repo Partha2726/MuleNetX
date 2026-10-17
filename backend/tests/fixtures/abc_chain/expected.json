@@ -84,5 +84,60 @@
     },
     "fraud_component_size_histogram": {},
     "accounts_with_7_active_days": 0
+  },
+  "analytics": {
+    "note": "Hand-computed: PageRank solved exactly (damping 0.85, dangling C redistributed uniformly); betweenness Brandes normalized by (n-1)(n-2)=2; Louvain on path A-B(100)-C(50): one community maximizes modularity (Q=0 > -0.0556).",
+    "degree": {
+      "CA": [
+        1,
+        0,
+        1
+      ],
+      "CB": [
+        2,
+        1,
+        1
+      ],
+      "CC": [
+        1,
+        1,
+        0
+      ]
+    },
+    "pagerank": {
+      "CA": 0.18441678192715538,
+      "CB": 0.34117104656523745,
+      "CC": 0.47441217150760717
+    },
+    "pagerank_norm": {
+      "CA": 0.0,
+      "CB": 0.5405405,
+      "CC": 1.0
+    },
+    "betweenness": {
+      "CA": 0.0,
+      "CB": 0.5,
+      "CC": 0.0
+    },
+    "component": {
+      "id": "CA",
+      "size": 3
+    },
+    "communities": [
+      [
+        "CA",
+        "CB",
+        "CC"
+      ]
+    ],
+    "paths": {
+      "CA->CC": [
+        [
+          "CA",
+          "CB",
+          "CC"
+        ]
+      ]
+    }
   }
 }

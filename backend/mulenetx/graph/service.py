@@ -9,8 +9,9 @@ from datetime import datetime
 
 from sqlalchemy import func, select
 
+from mulenetx.core import ids
 from mulenetx.core.runtime import Runtime
-from mulenetx.core.timeutil import utcnow
+from mulenetx.core.timeutil import isoformat_utc, utcnow
 from mulenetx.db.models.canonical import Transaction
 from mulenetx.db.models.lineage import GraphSnapshot
 from mulenetx.graph.build import GraphBuilder
@@ -21,6 +22,14 @@ logger = logging.getLogger("mulenetx.graph")
 
 PIPELINE_VERSION = "graph-build-v1"
 GRAPH_SCHEMA_VERSION = "neo4j-schema-v1"
+
+
+def snapshot_id_for(dataset_id: uuid.UUID, purpose: str, cutoff: datetime) -> uuid.UUID:
+    return ids.graph_snapshot_id(dataset_id, purpose, isoformat_utc(cutoff), PIPELINE_VERSION, GRAPH_SCHEMA_VERSION)
+
+
+def operational_snapshot_id(dataset_id: uuid.UUID, cutoff: datetime) -> uuid.UUID:
+    return snapshot_id_for(dataset_id, "OPERATIONAL", cutoff)
 
 
 class GraphValidationMismatchError(Exception):
@@ -102,7 +111,8 @@ class GraphService:
             snap.node_count = result.node_count
             snap.edge_count = result.edge_count
             snap.validation_digest = result.digest
-            snap.ready_at = utcnow()
+            if snap.ready_at is None:  # a re-materialized (previously retired) snapshot keeps its first ready_at
+                snap.ready_at = utcnow()
             db.commit()
             return snap
 

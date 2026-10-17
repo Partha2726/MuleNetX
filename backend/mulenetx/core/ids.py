@@ -71,3 +71,13 @@ def intervention_candidate_id(
 def reference_ring_id(reference_construction_version: str, member_account_ids: Iterable[str]) -> uuid.UUID:
     """`refring|{reference_construction_version}|{sorted member account_ids}`."""
     return _uuid5(f"refring|{reference_construction_version}|{_sorted_list(member_account_ids)}")
+
+
+def graph_snapshot_id(
+    dataset_id: uuid.UUID | str, purpose: str, data_cutoff: str, pipeline_version: str, graph_schema_version: str
+) -> uuid.UUID:
+    """`snapshot|{dataset_id}|{purpose}|{data_cutoff}|{pipeline_version}|{graph_schema_version}` (OQ-37).
+
+    Not in the §6.2.3 table: identical inputs and versions yield the identical snapshot, which §25.5 needs
+    for identical community, motif and path identifiers on rerun."""
+    return _uuid5(f"snapshot|{dataset_id}|{purpose}|{data_cutoff}|{pipeline_version}|{graph_schema_version}")

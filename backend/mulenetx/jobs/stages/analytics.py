@@ -1,12 +1,10 @@
-"""ANALYTICS_RUNNING stage (SRS §8, §15.9). Recorded no-op until T13."""
+"""ANALYTICS_RUNNING stage (SRS §8; motifs §15.9 are added in T31)."""
 
 from __future__ import annotations
 
-import uuid
-
 from sqlalchemy.orm import Session
 
-from mulenetx.core.timeutil import utcnow
+from mulenetx.analytics.service import AnalyticsService
 from mulenetx.db.models.lineage import AnalyticsRun, GraphSnapshot
 from mulenetx.db.models.pipeline import PipelineRun
 from mulenetx.jobs.stages.base import Stage, StageContext, StageOutcome
@@ -22,23 +20,17 @@ class AnalyticsStage(Stage):
         return snapshot is not None and snapshot.status == "READY"
 
     def execute(self, ctx: StageContext) -> StageOutcome:
-        run_id = ctx.load_run().analytics_run_id or uuid.uuid4()
+        run = ctx.load_run()
+        if run.analytics_run_id is not None:
+            with ctx.runtime.session_factory() as session:
+                existing = session.get(AnalyticsRun, run.analytics_run_id)
+                if existing is not None and existing.status == "SUCCEEDED":
+                    return StageOutcome()
         with ctx.runtime.session_factory() as session:
-            if session.get(AnalyticsRun, run_id) is None:
-                run = ctx.run(session)
-                now = utcnow()
-                session.add(
-                    AnalyticsRun(
-                        analytics_run_id=run_id,
-                        graph_snapshot_id=run.graph_snapshot_id,
-                        analytics_version="noop",
-                        engine="NETWORKX",
-                        algorithm_configuration={"noop": True},
-                        started_at=now,
-                        completed_at=now,
-                        status="SUCCEEDED",
-                    )
-                )
-                session.commit()
-        ctx.set_once("analytics_run_id", run_id)
+            snap = session.get(GraphSnapshot, run.graph_snapshot_id)
+            assert snap is not None
+            snapshot_id, dataset_id, cutoff = snap.graph_snapshot_id, snap.dataset_id, snap.data_cutoff
+        result = AnalyticsService(ctx.runtime).run(snapshot_id, dataset_id, cutoff)
+        ctx.check()
+        ctx.set_once("analytics_run_id", result.analytics_run_id)
         return StageOutcome()
