@@ -51,8 +51,27 @@ def clean_db(migrated_db: str) -> str:
 FAST_ARGON = {"argon2_memory_kib": 8192, "argon2_time_cost": 1, "argon2_parallelism": 1}
 
 
+@pytest.fixture(scope="session")
+def neo4j_schema() -> None:
+    from mulenetx.graph.neo4j_client import Neo4jClient
+
+    client = Neo4jClient(BASE_ENV["neo4j_uri"], BASE_ENV["neo4j_user"], BASE_ENV["neo4j_password"])
+    client.create_schema()
+    client.close()
+
+
 @pytest.fixture
-def app(clean_db: str) -> Any:
+def clean_graph(neo4j_schema: None) -> None:
+    from mulenetx.graph.neo4j_client import Neo4jClient
+
+    client = Neo4jClient(BASE_ENV["neo4j_uri"], BASE_ENV["neo4j_user"], BASE_ENV["neo4j_password"])
+    while client.run("MATCH (n) WITH n LIMIT 10000 DETACH DELETE n RETURN count(*) AS n")[0]["n"]:
+        pass
+    client.close()
+
+
+@pytest.fixture
+def app(clean_db: str, clean_graph: None) -> Any:
     from mulenetx.main import create_app
 
     return create_app(make_settings(postgres_dsn=clean_db, **FAST_ARGON))

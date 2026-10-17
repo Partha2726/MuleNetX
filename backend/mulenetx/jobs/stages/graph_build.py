@@ -1,4 +1,5 @@
-"""GRAPH_BUILDING stage (SRS §6.8). Recorded no-op until T11: records a READY snapshot row only."""
+"""GRAPH_BUILDING stage (SRS §6.8): build and validate the OPERATIONAL snapshot (data_cutoff = the
+dataset's maximum transaction timestamp)."""
 
 from __future__ import annotations
 
@@ -7,10 +8,10 @@ import uuid
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from mulenetx.core.timeutil import utcnow
+from mulenetx.core.runtime import Runtime
 from mulenetx.db.models.canonical import Transaction
-from mulenetx.db.models.lineage import GraphSnapshot
 from mulenetx.db.models.pipeline import IngestionRun, PipelineRun
+from mulenetx.graph.service import GraphService, GraphValidationMismatchError
 from mulenetx.jobs.runner import JobFailedError
 from mulenetx.jobs.stages.base import Stage, StageContext, StageOutcome
 
@@ -25,33 +26,24 @@ class GraphBuildStage(Stage):
         return ingestion is not None and ingestion.status == "SUCCEEDED"
 
     def execute(self, ctx: StageContext) -> StageOutcome:
-        snapshot_id = ctx.load_run().graph_snapshot_id or uuid.uuid4()
+        run = ctx.load_run()
+        snapshot_id = run.graph_snapshot_id or uuid.uuid4()
         with ctx.runtime.session_factory() as session:
-            if session.get(GraphSnapshot, snapshot_id) is None:
-                run = ctx.run(session)
-                cutoff, count = session.execute(
-                    select(func.max(Transaction.timestamp), func.count()).where(
-                        Transaction.dataset_id == ctx.dataset_id
-                    )
-                ).one()
-                if cutoff is None:
-                    raise JobFailedError("PIPELINE_PREREQUISITE_MISSING", "the dataset has no accepted transactions")
-                now = utcnow()
-                session.add(
-                    GraphSnapshot(
-                        graph_snapshot_id=snapshot_id,
-                        dataset_id=ctx.dataset_id,
-                        ingestion_run_id=run.ingestion_run_id,
-                        purpose="OPERATIONAL",
-                        data_cutoff=cutoff,
-                        pipeline_version="noop",
-                        graph_schema_version="noop",
-                        source_record_count=count,
-                        status="READY",
-                        created_at=now,
-                        ready_at=now,
-                    )
-                )
-                session.commit()
+            cutoff = session.execute(
+                select(func.max(Transaction.timestamp)).where(Transaction.dataset_id == ctx.dataset_id)
+            ).scalar_one()
+        if cutoff is None:
+            raise JobFailedError("PIPELINE_PREREQUISITE_MISSING", "the dataset has no accepted transactions")
+        assert run.ingestion_run_id is not None
+        service = GraphService(ctx.runtime)
+        service.create_snapshot_row(snapshot_id, ctx.dataset_id, run.ingestion_run_id, "OPERATIONAL", cutoff)
         ctx.set_once("graph_snapshot_id", snapshot_id)
+        try:
+            service.build_and_validate(snapshot_id, ctx.check)
+        except GraphValidationMismatchError as exc:
+            raise JobFailedError("GRAPH_VALIDATION_MISMATCH", f"graph validation mismatch: {exc}") from exc
         return StageOutcome()
+
+    def on_failure(self, runtime: Runtime, run: PipelineRun, category: str, message: str) -> None:
+        if run.graph_snapshot_id is not None:
+            GraphService(runtime).mark_failed(run.graph_snapshot_id)
