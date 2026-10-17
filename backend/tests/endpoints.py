@@ -36,6 +36,7 @@ ENDPOINTS: list[Endpoint] = [
     Endpoint("POST", "/api/v1/ingestion", "ingestion.create"),
     Endpoint("GET", "/api/v1/ingestion", "ingestion.read"),
     Endpoint("GET", "/api/v1/ingestion/{id}", "ingestion.read"),
+    Endpoint("GET", "/api/v1/datasets/{id}/profile", "ingestion.read"),
     Endpoint("GET", "/api/v1/pipeline-runs", "pipeline.read"),
     Endpoint("GET", "/api/v1/pipeline-runs/{id}", "pipeline.read"),
     Endpoint("POST", "/api/v1/pipeline-runs", "pipeline.control", {"dataset_id": PLACEHOLDER}),

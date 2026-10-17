@@ -107,3 +107,22 @@ def get_ingestion(
     services: Services = Depends(get_services),
 ) -> dict[str, Any]:
     return services.ingestion.get(db, ingestion_run_id)
+
+
+@router.get("/datasets/{dataset_id}/profile")
+def get_profile(
+    dataset_id: uuid.UUID,
+    _p: Principal = Depends(require("ingestion.read")),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    from mulenetx.db.models.datasets import DatasetProfile
+
+    profile = db.get(DatasetProfile, dataset_id)
+    if profile is None:
+        raise AppError(ec.NOT_FOUND, details={"resource": "dataset_profile"})
+    return {
+        "dataset_id": str(profile.dataset_id),
+        "profile_version": profile.profile_version,
+        "metrics": profile.metrics,
+        "created_at": profile.created_at.isoformat(),
+    }
