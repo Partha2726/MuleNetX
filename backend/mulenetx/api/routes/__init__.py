@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
+from mulenetx.api.routes import health
+
 
 def register_routes(app: FastAPI) -> None:
-    return None
+    app.include_router(health.router)

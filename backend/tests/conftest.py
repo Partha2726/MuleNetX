@@ -17,6 +17,7 @@ BASE_ENV: dict[str, Any] = {
     "cors_allowed_origins": ["http://localhost:8080"],
     "artifact_dir": "/tmp/mulenetx-test/artifacts",
     "staging_dir": "/tmp/mulenetx-test/staging",
+    "ollama_url": "http://127.0.0.1:59999",
 }
 
 
@@ -28,3 +29,20 @@ def make_settings(**overrides: Any) -> Settings:
 @pytest.fixture
 def settings() -> Settings:
     return make_settings()
+
+
+@pytest.fixture(scope="session")
+def migrated_db() -> str:
+    """The main test database, migrated to head once per session. Returns the app DSN."""
+    from tests import dbutil
+
+    dbutil.upgrade(dbutil.owner_dsn())
+    return dbutil.app_dsn()
+
+
+@pytest.fixture
+def clean_db(migrated_db: str) -> str:
+    from tests import dbutil
+
+    dbutil.truncate_all()
+    return migrated_db

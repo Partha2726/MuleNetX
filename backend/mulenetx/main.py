@@ -16,6 +16,7 @@ from mulenetx.core import error_codes as ec
 from mulenetx.core.config import Settings, get_settings
 from mulenetx.core.errors import AppError, error_body
 from mulenetx.core.logging import configure_logging, request_id_var
+from mulenetx.core.runtime import Runtime
 
 logger = logging.getLogger("mulenetx.api")
 
@@ -63,6 +64,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     configure_logging(cfg.log_level)
     app = FastAPI(title="MuleNetX", version="1.0.0", docs_url=None, redoc_url=None)
     app.state.settings = cfg
+    app.state.runtime = Runtime(cfg)
     install_error_handlers(app)
     app.add_middleware(
         CORSMiddleware,
@@ -76,6 +78,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     from mulenetx.api.routes import register_routes
 
     register_routes(app)
+
+    @app.on_event("shutdown")
+    def _close_runtime() -> None:
+        app.state.runtime.close()
+
     return app
 
 

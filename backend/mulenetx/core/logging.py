@@ -51,6 +51,8 @@ def configure_logging(level: str = "INFO") -> None:
     root.setLevel(level)
     for noisy in ("uvicorn.access",):
         logging.getLogger(noisy).disabled = True
+    for chatty in ("httpx", "httpcore", "alembic", "neo4j"):
+        logging.getLogger(chatty).setLevel(logging.WARNING)
 
 
 def log_fields(logger: logging.Logger, level: int, message: str, **fields: Any) -> None:
