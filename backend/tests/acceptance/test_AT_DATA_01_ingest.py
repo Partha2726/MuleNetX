@@ -38,7 +38,8 @@ def test_AT_DATA_01_ingest_valid_fixture(app, client, users) -> None:
         txs = db.execute(select(Transaction).order_by(Transaction.transaction_id)).scalars().all()
         profile = db.get(DatasetProfile, accounts[0].dataset_id)
     assert [a.account_id for a in accounts] == [f"{key}:{r}" for r in exp["accounts"]]
-    assert all(a.account_type == "CUSTOMER" and a.risk_score is None for a in accounts)
+    assert all(a.account_type == "CUSTOMER" for a in accounts)
+    assert all(a.risk_tier in ("LOW", "MEDIUM", "HIGH", "CRITICAL") for a in accounts)  # projection set at READY
     for tx, e in zip(txs, exp["transactions"], strict=True):
         assert tx.transaction_id == f"{key}:{e['ref']}"
         assert tx.source_account_id == f"{key}:{e['source']}"

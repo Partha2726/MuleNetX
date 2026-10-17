@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from datetime import datetime
 from typing import Any
 
@@ -16,6 +17,7 @@ from mulenetx.core.errors import AppError, limit_exceeded
 from mulenetx.core.pagination import offset_page, page_request
 from mulenetx.core.timeutil import ensure_utc
 from mulenetx.db.repositories import accounts as account_repo
+from mulenetx.db.repositories import risk as risk_repo
 from mulenetx.db.repositories import transactions as tx_repo
 
 router = APIRouter(prefix="/api/v1/accounts", tags=["accounts"])
@@ -91,3 +93,63 @@ def account_transactions(
         cursor=cursor,
         max_days=s.max_transaction_range_days,
     )
+
+
+@router.get("/{account_id}/risk")
+def account_risk(
+    account_id: str,
+    scoring_run_id: uuid.UUID | None = Query(default=None),
+    _p: Principal = Depends(require("risk.read")),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    account_repo.require(db, account_id)
+    return risk_repo.risk(db, account_id, scoring_run_id)
+
+
+@router.get("/{account_id}/risk/history", response_model=Page)
+def account_risk_history(
+    account_id: str,
+    page: int | None = Query(default=None),
+    page_size: int | None = Query(default=None),
+    _p: Principal = Depends(require("risk.read")),
+    db: Session = Depends(get_db),
+    services: Services = Depends(get_services),
+) -> dict[str, Any]:
+    s = services.runtime.settings
+    req = page_request(page, page_size, s.default_page_size, s.max_page_size)
+    account_repo.require(db, account_id)
+    items, total = risk_repo.history(db, account_id, req)
+    return offset_page(items, req, total, s.pagination_count_cap)
+
+
+@router.get("/{account_id}/risk/propagation")
+def account_risk_propagation(
+    account_id: str,
+    scoring_run_id: uuid.UUID | None = Query(default=None),
+    _p: Principal = Depends(require("risk.read")),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    account_repo.require(db, account_id)
+    return risk_repo.propagation(db, account_id, scoring_run_id)
+
+
+@router.get("/{account_id}/features")
+def account_features(
+    account_id: str,
+    scoring_run_id: uuid.UUID | None = Query(default=None),
+    _p: Principal = Depends(require("risk.read")),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    account_repo.require(db, account_id)
+    return risk_repo.features(db, account_id, scoring_run_id)
+
+
+@router.get("/{account_id}/temporal")
+def account_temporal(
+    account_id: str,
+    scoring_run_id: uuid.UUID | None = Query(default=None),
+    _p: Principal = Depends(require("temporal.read")),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    account_repo.require(db, account_id)
+    return risk_repo.temporal(db, account_id, scoring_run_id)

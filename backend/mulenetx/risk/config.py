@@ -99,6 +99,7 @@ def risk_logic_content(settings: Settings) -> dict[str, Any]:
             "decay": "1/(1+d)",
             "maximum_contribution": s.propagation_maximum_contribution,
             "source_condition": f"pre_propagation_score >= {s.suspicious_threshold}",
+            "source_threshold": s.suspicious_threshold,
             "adjacency": "undirected account projection",
             "provenance_top_n": s.propagation_provenance_top_n,
         },
