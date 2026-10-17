@@ -62,3 +62,21 @@ WITH a LIMIT $batch
 DETACH DELETE a
 RETURN count(*) AS n
 """
+
+ACCOUNT_IN_SNAPSHOT: Final[str] = "MATCH (a:Account {snapshot_key: $key}) RETURN a.account_id AS id"
+
+NEIGHBOR_CANDIDATES: Final[str] = """
+UNWIND $frontier AS id
+MATCH (a:Account {snapshot_key: $sid + ':' + id})-[r:TRANSFERRED_TO]-(b:Account)
+WHERE r.snapshot_id = $sid AND NOT b.account_id IN $visited
+WITH b.account_id AS nb, max(r.total_amount_micros) AS best
+RETURN nb, best ORDER BY best DESC, nb ASC LIMIT $limit
+"""
+
+EDGES_AMONG: Final[str] = """
+UNWIND $keys AS k
+MATCH (a:Account {snapshot_key: k})-[r:TRANSFERRED_TO]->(b:Account)
+WHERE r.snapshot_id = $sid AND b.account_id IN $ids
+RETURN a.account_id AS src, b.account_id AS dst, r.tx_count AS tx_count, r.total_amount_micros AS micros,
+       r.first_ts AS first_ts, r.last_ts AS last_ts
+"""

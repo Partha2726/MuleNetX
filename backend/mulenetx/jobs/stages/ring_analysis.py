@@ -13,7 +13,9 @@ class RingAnalysisStage(Stage):
     name = "RING_ANALYSIS"
 
     def execute(self, ctx: StageContext) -> StageOutcome:
+        max_attempts = ctx.runtime.settings.job_max_attempts
+
         def finalize(session: Session) -> None:
-            activate(session, ctx.run(session))
+            activate(session, ctx.run(session), max_attempts)
 
         return StageOutcome(finalize=finalize)

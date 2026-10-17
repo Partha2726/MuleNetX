@@ -56,3 +56,18 @@ def run_worker(app: FastAPI, timeout: float = 120) -> None:
         runner.drain(timeout=timeout)
     finally:
         runner.shutdown()
+
+
+def seed_and_activate(
+    app: FastAPI, client: TestClient, admin: Actor, edges: list[tuple[str, str, float, int]], key: str = "fx"
+) -> Any:
+    """Seed canonical rows directly, run the pipeline to READY, return the SeededDataset."""
+    from tests.seed import seed_dataset
+
+    ds = seed_dataset(get_services(_Req(app)).runtime, edges, key=key)
+    resp = client.post("/api/v1/pipeline-runs", json={"dataset_id": str(ds.dataset_id)}, headers=admin.headers)
+    assert resp.status_code == 202, resp.text
+    run_worker(app)
+    run = client.get(f"/api/v1/pipeline-runs/{resp.json()['pipeline_run_id']}", headers=admin.headers).json()
+    assert run["current_state"] == "READY", run
+    return ds

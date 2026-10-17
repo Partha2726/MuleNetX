@@ -45,4 +45,8 @@ ENDPOINTS: list[Endpoint] = [
     Endpoint("GET", "/api/v1/models/{version}", "model.read"),
     Endpoint("GET", "/api/v1/context", "account.read"),
     Endpoint("POST", "/api/v1/ingestion/{id}/retry", "pipeline.control"),
+    Endpoint("GET", "/api/v1/accounts", "account.read"),
+    Endpoint("GET", "/api/v1/accounts/{id}", "account.read"),
+    Endpoint("GET", "/api/v1/accounts/{id}/transactions", "transaction.read"),
+    Endpoint("GET", "/api/v1/graph/neighborhood", "graph.read", params={"account_id": "x:CA"}),
 ]

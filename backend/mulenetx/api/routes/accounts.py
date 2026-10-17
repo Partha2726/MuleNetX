@@ -1,0 +1,93 @@
+"""Accounts and transactions (SRS §19.2, §19.6)."""
+
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
+
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy.orm import Session
+
+from mulenetx.api.deps import Services, get_db, get_services, require
+from mulenetx.api.schemas.common import Page
+from mulenetx.auth.service import Principal
+from mulenetx.core import error_codes as ec
+from mulenetx.core.errors import AppError, limit_exceeded
+from mulenetx.core.pagination import offset_page, page_request
+from mulenetx.core.timeutil import ensure_utc
+from mulenetx.db.repositories import accounts as account_repo
+from mulenetx.db.repositories import transactions as tx_repo
+
+router = APIRouter(prefix="/api/v1/accounts", tags=["accounts"])
+
+
+def _utc(value: datetime | None, field: str) -> datetime | None:
+    if value is None:
+        return None
+    try:
+        return ensure_utc(value)
+    except ValueError as exc:
+        raise AppError(ec.VALIDATION_ERROR, "Timestamps must include a UTC offset.", {"field": field}) from exc
+
+
+@router.get("", response_model=Page)
+def search_accounts(
+    q: str | None = Query(default=None),
+    risk_tier: str | None = Query(default=None),
+    account_type: str | None = Query(default=None),
+    sort: str = Query(default="risk_score"),
+    order: str = Query(default="desc"),
+    page: int | None = Query(default=None),
+    page_size: int | None = Query(default=None),
+    _p: Principal = Depends(require("account.read")),
+    db: Session = Depends(get_db),
+    services: Services = Depends(get_services),
+) -> dict[str, Any]:
+    s = services.runtime.settings
+    req = page_request(page, page_size, s.default_page_size, s.max_page_size)
+    items, total = account_repo.search(
+        db, req, q=q, risk_tier=risk_tier, account_type=account_type, sort=sort, order=order
+    )
+    return offset_page(items, req, total, s.pagination_count_cap)
+
+
+@router.get("/{account_id}")
+def get_account(
+    account_id: str,
+    _p: Principal = Depends(require("account.read")),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    return account_repo.get(db, account_id)
+
+
+@router.get("/{account_id}/transactions")
+def account_transactions(
+    account_id: str,
+    start: datetime | None = Query(default=None),
+    end: datetime | None = Query(default=None),
+    type: str | None = Query(default=None),  # noqa: A002 - SRS parameter name
+    direction: str = Query(default="any"),
+    page_size: int | None = Query(default=None),
+    cursor: str | None = Query(default=None),
+    _p: Principal = Depends(require("transaction.read")),
+    db: Session = Depends(get_db),
+    services: Services = Depends(get_services),
+) -> dict[str, Any]:
+    s = services.runtime.settings
+    size = s.default_page_size if page_size is None else page_size
+    if size < 1:
+        raise AppError(ec.VALIDATION_ERROR, details={"field": "page_size"})
+    if size > s.max_page_size:
+        raise limit_exceeded("page_size", s.max_page_size)
+    account_repo.require(db, account_id)
+    return tx_repo.page_for_account(
+        db,
+        account_id,
+        start=_utc(start, "start"),
+        end=_utc(end, "end"),
+        tx_type=type,
+        direction=direction,
+        page_size=size,
+        cursor=cursor,
+        max_days=s.max_transaction_range_days,
+    )
