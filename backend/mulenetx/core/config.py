@@ -63,7 +63,7 @@ class Settings(BaseSettings):
     # ── Ingestion, jobs, snapshots (§7, §19.5) ─────────────────────────────
     max_upload_bytes: int = Field(default=1024 * 1024 * 1024, gt=0)
     job_lease_seconds: int = Field(default=60, gt=0)
-    job_heartbeat_seconds: int = Field(default=15, gt=0)
+    job_heartbeat_seconds: float = Field(default=15, gt=0)
     job_max_attempts: int = Field(default=3, ge=1)
     job_timeout_ingest_seconds: int = Field(default=3600, gt=0)
     job_timeout_pipeline_stage_seconds: int = Field(default=7200, gt=0)
