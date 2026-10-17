@@ -24,9 +24,18 @@ pytestmark = pytest.mark.integration
 
 DB = "mulenetx_ops06"
 APPEND_ONLY = (
-    "findings", "audit_events", "transactions", "risk_assessments", "account_feature_values",
-    "shap_explanations", "propagation_contributions", "ring_feature_sets", "ring_risk_assessments",
-    "temporal_motifs", "intervention_candidates", "evaluation_metrics",
+    "findings",
+    "audit_events",
+    "transactions",
+    "risk_assessments",
+    "account_feature_values",
+    "shap_explanations",
+    "propagation_contributions",
+    "ring_feature_sets",
+    "ring_risk_assessments",
+    "temporal_motifs",
+    "intervention_candidates",
+    "evaluation_metrics",
 )
 # Constraint cells whose rule is not a single-row CHECK: enforced elsewhere and tested elsewhere.
 CHECK_ENFORCED_ELSEWHERE = {
@@ -213,8 +222,10 @@ def test_srs_declared_constraints_exist(constraints: Any) -> None:
             if re.search(r"\b(UNIQUE|PK)\b", cell) and not any(col.name in s for s in kinds["u"] + kinds["p"]):
                 problems.append(f"{table}.{col.name}: SRS UNIQUE/PK missing")
             wants_check = re.search(r"CHECK|non-empty|≥|≤|> 0|\[a-z0-9", cell)
-            if wants_check and (table, col.name) not in CHECK_ENFORCED_ELSEWHERE and not any(
-                col.name in s for s in kinds["c"]
+            if (
+                wants_check
+                and (table, col.name) not in CHECK_ENFORCED_ELSEWHERE
+                and not any(col.name in s for s in kinds["c"])
             ):
                 problems.append(f"{table}.{col.name}: SRS CHECK missing")
     for table, keyword, columns in _prose_keys(text):

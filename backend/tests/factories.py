@@ -648,6 +648,9 @@ def evaluation_metrics(f: Fresh) -> Row:
 FACTORIES: dict[str, Callable[[Fresh], Row]] = {
     name: fn
     for name, fn in globals().items()
-    if callable(fn) and not name.startswith("_") and name not in {"insert", "Fresh", "Callable", "Row"}
-    and getattr(fn, "__module__", None) == __name__ and name.islower()
+    if callable(fn)
+    and not name.startswith("_")
+    and name not in {"insert", "Fresh", "Callable", "Row"}
+    and getattr(fn, "__module__", None) == __name__
+    and name.islower()
 }

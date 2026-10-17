@@ -14,9 +14,23 @@ import schema_check  # noqa: E402
 
 DB = "mulenetx_migtest"
 GROUP_1_2 = [
-    "users", "auth_sessions", "datasets", "accounts", "transactions", "audit_events", "dataset_profiles",
-    "ingestion_runs", "pipeline_runs", "jobs", "graph_snapshots", "analytics_runs", "feature_versions",
-    "model_versions", "risk_logic_versions", "scoring_runs", "active_context",
+    "users",
+    "auth_sessions",
+    "datasets",
+    "accounts",
+    "transactions",
+    "audit_events",
+    "dataset_profiles",
+    "ingestion_runs",
+    "pipeline_runs",
+    "jobs",
+    "graph_snapshots",
+    "analytics_runs",
+    "feature_versions",
+    "model_versions",
+    "risk_logic_versions",
+    "scoring_runs",
+    "active_context",
 ]
 
 

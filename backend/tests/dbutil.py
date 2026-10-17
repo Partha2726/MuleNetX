@@ -77,7 +77,5 @@ def truncate_all(db: str = "mulenetx") -> None:
         if tables:
             conn.execute("TRUNCATE " + ", ".join(f'"{t}"' for t in tables) + " RESTART IDENTITY CASCADE")
         conn.execute("INSERT INTO active_context (singleton, updated_at) VALUES (TRUE, now())")
-        for (name,) in conn.execute(
-            "SELECT tablename FROM pg_tables WHERE schemaname = 'staging'"
-        ).fetchall():
+        for (name,) in conn.execute("SELECT tablename FROM pg_tables WHERE schemaname = 'staging'").fetchall():
             conn.execute(f'DROP TABLE IF EXISTS staging."{name}"')

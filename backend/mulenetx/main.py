@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, Request
@@ -62,9 +64,16 @@ def install_error_handlers(app: FastAPI) -> None:
 def create_app(settings: Settings | None = None) -> FastAPI:
     cfg = settings if settings is not None else get_settings()
     configure_logging(cfg.log_level)
-    app = FastAPI(title="MuleNetX", version="1.0.0", docs_url=None, redoc_url=None)
+    runtime = Runtime(cfg)
+
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+        yield
+        runtime.close()
+
+    app = FastAPI(title="MuleNetX", version="1.0.0", docs_url=None, redoc_url=None, lifespan=lifespan)
     app.state.settings = cfg
-    app.state.runtime = Runtime(cfg)
+    app.state.runtime = runtime
     install_error_handlers(app)
     app.add_middleware(
         CORSMiddleware,
@@ -78,11 +87,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     from mulenetx.api.routes import register_routes
 
     register_routes(app)
-
-    @app.on_event("shutdown")
-    def _close_runtime() -> None:
-        app.state.runtime.close()
-
     return app
 
 

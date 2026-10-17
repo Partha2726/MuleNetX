@@ -46,3 +46,29 @@ def clean_db(migrated_db: str) -> str:
 
     dbutil.truncate_all()
     return migrated_db
+
+
+FAST_ARGON = {"argon2_memory_kib": 8192, "argon2_time_cost": 1, "argon2_parallelism": 1}
+
+
+@pytest.fixture
+def app(clean_db: str) -> Any:
+    from mulenetx.main import create_app
+
+    return create_app(make_settings(postgres_dsn=clean_db, **FAST_ARGON))
+
+
+@pytest.fixture
+def client(app: Any) -> Any:
+    from fastapi.testclient import TestClient
+
+    with TestClient(app) as c:
+        yield c
+
+
+@pytest.fixture
+def users(app: Any) -> Any:
+    """Factory: users(role) -> Actor with a logged-in bearer token."""
+    from tests.apiutil import UserFactory
+
+    return UserFactory(app)
