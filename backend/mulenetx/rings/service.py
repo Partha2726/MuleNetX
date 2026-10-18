@@ -15,10 +15,36 @@ from sqlalchemy.orm import Session
 from mulenetx.core import ids
 from mulenetx.core.runtime import Runtime
 from mulenetx.db.models.lineage import AnalyticsRun, GraphSnapshot, ScoringRun
-from mulenetx.db.models.rings import RingCandidate
+from mulenetx.db.models.rings import RingCandidate, RingFeatureSet, RingMembership, RingRiskAssessment
 from mulenetx.flow.analytic_paths import Budget
+from mulenetx.rings import features as ring_features
 from mulenetx.rings import inputs
-from mulenetx.rings.candidates import CandidateScore, score_communities
+from mulenetx.rings import risk as ring_risk
+from mulenetx.rings.candidates import POTENTIAL_FRAUD_RING_CANDIDATE, CandidateScore, score_communities
+from mulenetx.rings.membership import Membership, membership
+
+RING_NAMESPACE = uuid.UUID("2b7d0c55-3d3a-4c6b-9f4e-8a1f0d2c6e91")
+
+
+@dataclass
+class RingIntelligence:
+    membership: Membership
+    features: ring_features.RingFeatures
+    risk: ring_risk.RingRisk
+
+
+def feature_set_id(ring_id: uuid.UUID, scoring_run_id: uuid.UUID) -> uuid.UUID:
+    return uuid.uuid5(RING_NAMESPACE, f"ring-features|{ring_id}|{scoring_run_id}|{ring_features.RING_FEATURE_VERSION}")
+
+
+def ring_risk_id(ring_id: uuid.UUID, scoring_run_id: uuid.UUID) -> uuid.UUID:
+    return uuid.uuid5(RING_NAMESPACE, f"ring-risk|{ring_id}|{scoring_run_id}|{ring_features.RING_FEATURE_VERSION}")
+
+
+def intelligence(ctx: inputs.ContextInputs, community_members: list[str]) -> RingIntelligence:
+    m = membership(ctx, community_members)
+    f = ring_features.compute(ctx, m)
+    return RingIntelligence(m, f, ring_risk.compute(ctx, m, f))
 
 
 @dataclass
@@ -28,6 +54,7 @@ class RingAnalysis:
     scoring: ScoringRun
     candidates: dict[str, CandidateScore]  # persisted classes only, by community_id
     context: inputs.ContextInputs
+    rings: dict[str, RingIntelligence]  # POTENTIAL_FRAUD_RING_CANDIDATE only, by community_id
 
 
 class RingIntelligenceService:
@@ -60,7 +87,12 @@ class RingIntelligenceService:
         )
         scored = score_communities(ctx)
         persisted = {cid: c for cid, c in scored.items() if c.candidate_class != "NOT_SUSPICIOUS"}
-        return RingAnalysis(snapshot, analytics, scoring, persisted, ctx)
+        rings = {
+            cid: intelligence(ctx, ctx.communities[cid])
+            for cid, c in persisted.items()
+            if c.candidate_class == POTENTIAL_FRAUD_RING_CANDIDATE
+        }
+        return RingAnalysis(snapshot, analytics, scoring, persisted, ctx, rings)
 
     @staticmethod
     def persist(db: Session, analysis: RingAnalysis, now: datetime) -> list[uuid.UUID]:
@@ -88,7 +120,61 @@ class RingIntelligenceService:
                 .on_conflict_do_nothing()
             )
             written.append(candidate_id)
+            ring = analysis.rings.get(community_id)
+            if ring is not None:
+                persist_ring(db, analysis, candidate_id, community_id, ring, now)
         return written
+
+
+def persist_ring(
+    db: Session, analysis: RingAnalysis, ring_id: uuid.UUID, community_id: str, ring: RingIntelligence, now: datetime
+) -> None:
+    run = analysis.scoring.scoring_run_id
+    for account_id in ring.membership.members:
+        db.execute(insert(RingMembership).values(ring_id=ring_id, account_id=account_id).on_conflict_do_nothing())
+    fs_id = feature_set_id(ring_id, run)
+    m = ring.membership
+    db.execute(
+        insert(RingFeatureSet)
+        .values(
+            ring_feature_set_id=fs_id,
+            ring_id=ring_id,
+            analytics_run_id=analysis.analytics.analytics_run_id,
+            community_id=community_id,
+            graph_snapshot_id=analysis.snapshot.graph_snapshot_id,
+            scoring_run_id=run,
+            analytics_version=analysis.analytics.analytics_version,
+            feature_version=ring_features.RING_FEATURE_VERSION,
+            ring_size=m.ring_size,
+            transaction_count=len(m.constituent),
+            start_time=m.start_time,
+            end_time=m.end_time,
+            temporal_span_seconds=m.temporal_span_seconds,
+            availability={**ring.features.availability, "counters": ring.features.scope.counters},
+            computed_at=now,
+            **ring_features.as_columns(ring.features),
+        )
+        .on_conflict_do_nothing()
+    )
+    r = ring.risk
+    db.execute(
+        insert(RingRiskAssessment)
+        .values(
+            ring_risk_assessment_id=ring_risk_id(ring_id, run),
+            ring_id=ring_id,
+            feature_set_id=fs_id,
+            scoring_run_id=run,
+            ring_risk_score=r.score,
+            risk_tier=r.tier,
+            availability={**r.availability, "temporal_indicators": r.temporal_indicators},
+            risk_logic_version=analysis.scoring.risk_logic_version,
+            analytics_version=analysis.analytics.analytics_version,
+            feature_version=ring_features.RING_FEATURE_VERSION,
+            generated_at=now,
+            **r.components,
+        )
+        .on_conflict_do_nothing()
+    )
 
 
 def candidates_of_run(db: Session, scoring_run_id: uuid.UUID) -> list[RingCandidate]:

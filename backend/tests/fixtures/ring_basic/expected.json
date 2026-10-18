@@ -155,5 +155,77 @@
   "H": "0.0000000",
   "D": "0.0000000",
   "score_below": "0.50"
+ },
+ "expected_ring": {
+  "members": [
+   "R1",
+   "R2",
+   "R3",
+   "R4",
+   "R5"
+  ],
+  "ring_size": 5,
+  "constituent": [
+   "t1",
+   "t2",
+   "t3",
+   "t5",
+   "t4"
+  ],
+  "start": 0,
+  "end": 7200,
+  "temporal_span_seconds": 7200,
+  "features": {
+   "RSD": "0.8000000",
+   "RC": "0.8214286",
+   "TC": "0.6000000",
+   "MFC": "0.8750000",
+   "CS": "0.4500000",
+   "FI": "0.0000000",
+   "FO": "0.0000000",
+   "CP": "1",
+   "SPD": "0.5000000"
+  },
+  "eligible_path_count": 18,
+  "qualifying_path_count": 9,
+  "paths_truncated": false,
+  "scope": [
+   "R1",
+   "R2",
+   "R3",
+   "R4",
+   "R5",
+   "Y"
+  ],
+  "suspicious_flow": "800.00",
+  "eligible_flow": "900.00",
+  "risk": {
+   "member_risk": "0.5600000",
+   "transaction_risk": "0.8000000",
+   "topology_signal": "0.3900000",
+   "temporal_signal": "0.3333333",
+   "money_flow_signal": "0.8888889"
+  },
+  "ring_risk_score": "0.5780000",
+  "risk_tier": "HIGH",
+  "temporal_indicators": {
+   "RAPID_PASS_THROUGH": 1,
+   "FAN_IN": 0,
+   "FAN_OUT": 0,
+   "CIRCULAR_FLOW": 1,
+   "LAYERED_MOVEMENT": 0,
+   "BURST_ACTIVITY": 0
+  },
+  "working": {
+   "motifs": "RAPID [t7,t1,t2] (has Y), RAPID [t2,t3] (R1,R2,R3), CIRCULAR [t1,t2,t3], LAYERED [t1,t2,t5,t4,t6] (has X), LAYERED [t7,t1,t2,t5,t4] (has Y)",
+   "RSD": "t1,t2,t3,t5 suspicious of 5 constituent",
+   "RC": "(0.9+0.8+0.6)/(0.9+0.8+0.6+0.3+0.2)=2.3/2.8",
+   "TC": "motifs wholly constituent: RAPID [t2,t3], CIRCULAR [t1,t2,t3] \u2192 {t1,t2,t3}/5",
+   "paths": "scope = members \u222a {Y}; 18 eligible, 9 qualifying (R1R2, R1R2R3, R3R1, R2R3R1, YR1, R2R3, R3R1R2, YR1R2, YR1R2R3)",
+   "MFC": "top-3 path flows YR1R2R3 700, YR1R2 600, YR1 500 \u2192 {t7,t1,t2}=700 / suspicious flow {t1,t2,t3,t7}=800",
+   "CS": "mean(PR mean 0.46, betweenness mean 0.44)",
+   "SPD": "9/18",
+   "risk": "0.25\u00b70.56 + 0.20\u00b70.8 + 0.20\u00b70.39 + 0.20\u00b70.3333333 + 0.15\u00b70.8888889 = 0.577999995 \u2192 0.5780000 (HIGH \u2265 0.50)"
+  }
  }
 }

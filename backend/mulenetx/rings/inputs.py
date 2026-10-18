@@ -33,6 +33,9 @@ class ContextInputs:
     motifs: list[MotifRef]
     budget: Budget
     communities: dict[str, list[str]] = field(default_factory=dict)  # community_id → members (account_id order)
+    tier_thresholds: dict[str, str] = field(
+        default_factory=lambda: {"LOW": "0.00", "MEDIUM": "0.25", "HIGH": "0.50", "CRITICAL": "0.75"}
+    )
 
     def internal(self, members: set[str]) -> list[tuple[str, str, Tx]]:
         """Transactions whose source and destination are both members, in (timestamp, transaction_id) order."""
@@ -76,6 +79,13 @@ def load(
                 {"s": snapshot_id, "v": analytics_version},
             )
         ]
+        thresholds = conn.execute(
+            text(
+                "SELECT r.tier_thresholds FROM scoring_runs s JOIN risk_logic_versions r USING (risk_logic_version) "
+                "WHERE s.scoring_run_id = :r"
+            ),
+            {"r": scoring_run_id},
+        ).scalar_one()
         communities: dict[str, list[str]] = {}
         for r in conn.execute(
             text(
@@ -88,4 +98,4 @@ def load(
     ids = [m.account_id for m in metrics]
     pr = dict(zip(ids, percentile_rank([float(m.pagerank_raw) for m in metrics]), strict=True))
     bt = dict(zip(ids, percentile_rank([float(m.betweenness_raw) for m in metrics]), strict=True))
-    return ContextInputs(run, proj, pr, bt, motifs, budget, communities)
+    return ContextInputs(run, proj, pr, bt, motifs, budget, communities, dict(thresholds))
