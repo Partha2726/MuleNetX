@@ -28,7 +28,9 @@ class CopilotService:
         s = runtime.settings
         self.rt = runtime
         self.audit = audit
-        self.client = client or OllamaClient(s.ollama_url, s.ollama_model, s.copilot_timeout_seconds)
+        # window = context budget + output budget + 2,048 for the system rules and a 4,000-character question
+        num_ctx = s.copilot_max_context_tokens + s.copilot_max_output_tokens + 2048
+        self.client = client or OllamaClient(s.ollama_url, s.ollama_model, s.copilot_timeout_seconds, num_ctx=num_ctx)
         self.limiter = Limiter(s.copilot_max_concurrency, s.copilot_queue_wait_seconds, s.copilot_rate_per_minute)
 
     def query(

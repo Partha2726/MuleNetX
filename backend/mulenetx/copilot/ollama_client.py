@@ -20,11 +20,20 @@ class Generation:
 
 
 class OllamaClient:
-    def __init__(self, base_url: str, model: str, timeout: float, transport: httpx.BaseTransport | None = None) -> None:
+    def __init__(
+        self,
+        base_url: str,
+        model: str,
+        timeout: float,
+        transport: httpx.BaseTransport | None = None,
+        num_ctx: int = 9072,
+    ) -> None:
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.timeout = timeout
         self.transport = transport
+        # Ollama's default window (2,048) silently drops the start of a longer prompt, i.e. the system rules.
+        self.num_ctx = num_ctx
 
     def _client(self) -> httpx.Client:
         return httpx.Client(base_url=self.base_url, timeout=self.timeout, transport=self.transport)
@@ -46,7 +55,9 @@ class OllamaClient:
             "messages": messages,
             "format": schema,
             "stream": False,
-            "options": {"temperature": 0, "seed": 42, "num_predict": max_tokens},
+            # num_predict is one past the limit so an over-long answer reaches validation rule 5 instead of
+            # being cut off silently and then failing to parse
+            "options": {"temperature": 0, "seed": 42, "num_predict": max_tokens + 1, "num_ctx": self.num_ctx},
         }
         try:
             with self._client() as http:

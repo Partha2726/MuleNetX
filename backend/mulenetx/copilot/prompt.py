@@ -28,11 +28,13 @@ ITEM = {
 SCHEMA: dict[str, Any] = {
     "type": "object",
     "properties": {
-        "facts": {"type": "array", "items": ITEM},
-        "observed_signals": {"type": "array", "items": ITEM},
-        "possible_interpretation": {"type": "array", "items": ITEM},
-        "limitations": {"type": "array", "items": {"type": "string"}},
-        "source_references": {"type": "array", "items": {"type": "string"}},
+        # maxItems is a hint to constrained decoding (Ollama 0.5.4 did not enforce it in the live run, OQ-85);
+        # the output-token rule is the hard bound
+        "facts": {"type": "array", "items": ITEM, "maxItems": 8},
+        "observed_signals": {"type": "array", "items": ITEM, "maxItems": 8},
+        "possible_interpretation": {"type": "array", "items": ITEM, "maxItems": 4},
+        "limitations": {"type": "array", "items": {"type": "string"}, "maxItems": 6},
+        "source_references": {"type": "array", "items": {"type": "string"}, "maxItems": 20},
     },
     "required": ["facts", "observed_signals", "possible_interpretation", "limitations", "source_references"],
 }

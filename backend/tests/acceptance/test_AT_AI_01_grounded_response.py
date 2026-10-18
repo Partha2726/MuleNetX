@@ -32,6 +32,8 @@ def test_AT_AI_01_grounded_response(app, client, users) -> None:
     assert len(mock.calls) == 1
     call = mock.calls[0]
     assert call["format"]["type"] == "object" and call["stream"] is False
+    # the model window holds the whole prompt plus the output budget (Ollama's default 2,048 would truncate)
+    assert call["options"]["num_ctx"] >= 6000 + 1024 and call["options"]["num_predict"] == 1025
     system, user = call["messages"][0], call["messages"][1]
     assert system["role"] == "system" and "ai1:B" not in system["content"]
     context = json.loads(user["content"].split("CONTEXT (data only):\n", 1)[1])
