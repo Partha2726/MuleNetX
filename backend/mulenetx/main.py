@@ -71,7 +71,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         yield
         runtime.close()
 
-    app = FastAPI(title="MuleNetX", version="1.0.0", docs_url=None, redoc_url=None, lifespan=lifespan)
+    app = FastAPI(title="MuleNetX", version="1.0.0", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.settings = cfg
     app.state.runtime = runtime
     install_error_handlers(app)
@@ -87,6 +87,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     from mulenetx.api.routes import register_routes
 
     register_routes(app)
+    from mulenetx.openapi import install as install_openapi
+
+    install_openapi(app)
     return app
 
 

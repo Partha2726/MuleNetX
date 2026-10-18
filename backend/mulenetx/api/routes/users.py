@@ -43,7 +43,7 @@ def create_user(
     return UserOut(**user_view(user))
 
 
-@router.patch("/{user_id}", response_model=UserOut)
+@router.patch("/{user_id}", response_model=UserOut, openapi_extra={"x-permission": "user.manage / role.manage"})
 def update_user(
     user_id: uuid.UUID,
     body: UserPatch,

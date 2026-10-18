@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from mulenetx.api.deps import Services, get_db, get_services, require
 from mulenetx.api.routes.pipelines import retry_run
+from mulenetx.api.schemas.responses import PathQueryOut, PipelineAccepted
 from mulenetx.auth.service import Principal
 from mulenetx.core import error_codes as ec
 from mulenetx.core.errors import AppError
@@ -26,7 +27,7 @@ def deprecate(response: JSONResponse, target: str) -> JSONResponse:
     return response
 
 
-@router.post("/ingestion/{ingestion_run_id}/retry", status_code=202, deprecated=True)
+@router.post("/ingestion/{ingestion_run_id}/retry", status_code=202, deprecated=True, response_model=PipelineAccepted)
 def ingestion_retry(
     ingestion_run_id: uuid.UUID,
     request: Request,
@@ -46,7 +47,7 @@ def ingestion_retry(
     return deprecate(response, f"/api/v1/pipeline-runs/{run_id}/retry")
 
 
-@router.get("/money-flow", deprecated=True)
+@router.get("/money-flow", deprecated=True, response_model=PathQueryOut)
 def money_flow(
     source_account_id: str = Query(...),
     destination_account_id: str = Query(...),

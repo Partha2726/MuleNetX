@@ -8,12 +8,13 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from mulenetx.api.deps import Services, get_db, get_services, require
+from mulenetx.api.schemas.responses import ContextOut
 from mulenetx.auth.service import Principal
 
 router = APIRouter(prefix="/api/v1/context", tags=["context"])
 
 
-@router.get("")
+@router.get("", response_model=ContextOut)
 def get_context(
     _p: Principal = Depends(require("account.read")),
     db: Session = Depends(get_db),

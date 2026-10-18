@@ -10,6 +10,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
+from mulenetx.api.schemas.responses import HealthOut, ReadyOut
 from mulenetx.core.runtime import Runtime
 from mulenetx.db.schema_version import code_head, database_revision
 
@@ -17,7 +18,7 @@ router = APIRouter()
 _POOL = ThreadPoolExecutor(max_workers=4, thread_name_prefix="ready")
 
 
-@router.get("/health")
+@router.get("/health", response_model=HealthOut)
 def health() -> dict[str, str]:
     return {"status": "UP"}
 
@@ -65,7 +66,7 @@ def _worker_and_context(rt: Runtime) -> tuple[str, str]:
     return worker, context
 
 
-@router.get("/ready")
+@router.get("/ready", response_model=ReadyOut, responses={503: {"model": ReadyOut}})
 def ready(request: Request) -> JSONResponse:
     rt: Runtime = request.app.state.runtime
     pg_future = _POOL.submit(_postgres, rt)

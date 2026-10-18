@@ -98,4 +98,5 @@ ENDPOINTS: list[Endpoint] = [
         {"type": "t", "description": "d", "evidence": [], "source": "s"},
     ),
     Endpoint("GET", "/api/v1/cases/{id}/findings", "case.read"),
+    Endpoint("GET", "/api/v1/audit", "audit.read"),
 ]

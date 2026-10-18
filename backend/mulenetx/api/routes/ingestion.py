@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from mulenetx.api.deps import Services, get_db, get_services, require
-from mulenetx.api.schemas.common import Page
+from mulenetx.api.schemas.responses import IngestionAccepted, IngestionRunOut, PageOf, ProfileOut
 from mulenetx.auth.service import Principal
 from mulenetx.core import error_codes as ec
 from mulenetx.core.errors import AppError
@@ -27,7 +27,7 @@ def _rid(request: Request) -> str | None:
     return rid if isinstance(rid, str) else None
 
 
-@router.post("/ingestion", status_code=202)
+@router.post("/ingestion", status_code=202, response_model=IngestionAccepted)
 def submit(
     request: Request,
     file: UploadFile = File(...),
@@ -81,7 +81,7 @@ def submit(
     )
 
 
-@router.get("/ingestion", response_model=Page)
+@router.get("/ingestion", response_model=PageOf[IngestionRunOut])
 def list_ingestions(
     dataset_id: uuid.UUID | None = Query(default=None),
     status: str | None = Query(default=None),
@@ -99,7 +99,7 @@ def list_ingestions(
     return offset_page(items, req, total, s.pagination_count_cap)
 
 
-@router.get("/ingestion/{ingestion_run_id}")
+@router.get("/ingestion/{ingestion_run_id}", response_model=IngestionRunOut)
 def get_ingestion(
     ingestion_run_id: uuid.UUID,
     _p: Principal = Depends(require("ingestion.read")),
@@ -109,7 +109,7 @@ def get_ingestion(
     return services.ingestion.get(db, ingestion_run_id)
 
 
-@router.get("/datasets/{dataset_id}/profile")
+@router.get("/datasets/{dataset_id}/profile", response_model=ProfileOut)
 def get_profile(
     dataset_id: uuid.UUID,
     _p: Principal = Depends(require("ingestion.read")),

@@ -4,7 +4,7 @@ TEST_COMPOSE := docker compose -f docker-compose.test.yml -p mulenetx-test
 UV := cd backend && uv run
 
 .PHONY: up down logs migrate test test-backend test-frontend test-acceptance test-e2e lint typecheck \
-        bench gen-types traceability demo test-services test-services-down
+        bench openapi gen-types traceability demo test-services test-services-down
 
 up:
 	$(COMPOSE) up --build -d
@@ -51,8 +51,10 @@ test-e2e:
 bench:
 	$(UV) python ../scripts/bench.py
 
-gen-types:
+openapi:
 	cd backend && uv run python -m mulenetx.cli export-openapi --out ../docs/openapi.json
+
+gen-types: openapi
 	cd frontend && npx openapi-typescript ../docs/openapi.json -o src/api/schema.d.ts
 
 traceability:

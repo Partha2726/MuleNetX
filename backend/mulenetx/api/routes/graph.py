@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from mulenetx.api.deps import Services, get_db, get_services, require
+from mulenetx.api.schemas.responses import NeighborhoodOut, PathDetailOut, PathQueryOut
 from mulenetx.auth.service import Principal
 from mulenetx.core import error_codes as ec
 from mulenetx.core.errors import AppError, limit_exceeded
@@ -31,7 +32,7 @@ def bounded(name: str, value: int, maximum: int) -> int:
     return value
 
 
-@router.get("/neighborhood")
+@router.get("/neighborhood", response_model=NeighborhoodOut)
 def get_neighborhood(
     account_id: str = Query(...),
     depth: int = Query(default=1),
@@ -71,7 +72,7 @@ def run_path_query(
     )
 
 
-@router.get("/path")
+@router.get("/path", response_model=PathQueryOut)
 def get_path(
     source_account_id: str = Query(...),
     destination_account_id: str = Query(...),
@@ -88,7 +89,7 @@ def get_path(
     )
 
 
-@router.get("/paths/{path_id}")
+@router.get("/paths/{path_id}", response_model=PathDetailOut)
 def get_path_by_id(
     path_id: uuid.UUID,
     graph_snapshot_id: uuid.UUID = Query(...),

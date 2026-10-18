@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from mulenetx.api.deps import Services, deny, get_db, get_services, require
+from mulenetx.api.schemas.responses import CaseOut, FindingOut, PageOf, SubjectOut
 from mulenetx.auth.service import Principal
 from mulenetx.core import error_codes as ec
 from mulenetx.core.errors import AppError
@@ -61,7 +62,7 @@ def _denier(services: Services, principal: Principal, request: Request):  # type
     return make
 
 
-@router.get("")
+@router.get("", response_model=PageOf[CaseOut])
 def list_cases(
     status: str | None = Query(default=None),
     assigned_to: uuid.UUID | None = Query(default=None),
@@ -79,7 +80,7 @@ def list_cases(
     return offset_page([case_view(c) for c in rows], req, total, s.pagination_count_cap)
 
 
-@router.post("", status_code=201)
+@router.post("", status_code=201, response_model=CaseOut)
 def create_case(
     body: CaseCreate,
     request: Request,
@@ -93,7 +94,7 @@ def create_case(
     return JSONResponse(status_code=201, content=case_view(case))
 
 
-@router.get("/{case_id}")
+@router.get("/{case_id}", response_model=CaseOut)
 def get_case(
     case_id: uuid.UUID,
     _p: Principal = Depends(require("case.read")),
@@ -103,7 +104,7 @@ def get_case(
     return case_view(services.investigation.get(db, case_id))
 
 
-@router.patch("/{case_id}")
+@router.patch("/{case_id}", response_model=CaseOut)
 def patch_case(
     case_id: uuid.UUID,
     body: CasePatch,
@@ -119,7 +120,7 @@ def patch_case(
     return case_view(case)
 
 
-@router.get("/{case_id}/subjects")
+@router.get("/{case_id}/subjects", response_model=PageOf[SubjectOut])
 def list_subjects(
     case_id: uuid.UUID,
     page: int | None = Query(default=None),
@@ -135,7 +136,7 @@ def list_subjects(
     return offset_page([subject_view(x) for x in rows], req, total, s.pagination_count_cap)
 
 
-@router.post("/{case_id}/subjects", status_code=201)
+@router.post("/{case_id}/subjects", status_code=201, response_model=SubjectOut)
 def add_subject(
     case_id: uuid.UUID,
     body: SubjectCreate,
@@ -166,7 +167,7 @@ def remove_subject(
     return Response(status_code=204)
 
 
-@router.post("/{case_id}/findings", status_code=201)
+@router.post("/{case_id}/findings", status_code=201, response_model=FindingOut)
 def add_finding(
     case_id: uuid.UUID,
     body: FindingCreate,
@@ -188,7 +189,7 @@ def add_finding(
     return JSONResponse(status_code=201, content=finding_view(finding))
 
 
-@router.get("/{case_id}/findings")
+@router.get("/{case_id}/findings", response_model=PageOf[FindingOut])
 def list_findings(
     case_id: uuid.UUID,
     page: int | None = Query(default=None),

@@ -11,7 +11,7 @@ from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 
 from mulenetx.api.deps import Services, get_db, get_services, require
-from mulenetx.api.schemas.common import Page
+from mulenetx.api.schemas.responses import PageOf, PipelineAccepted, PipelineRunOut
 from mulenetx.auth.service import Principal
 from mulenetx.core import error_codes as ec
 from mulenetx.core.errors import AppError
@@ -32,7 +32,7 @@ def _rid(request: Request) -> str | None:
     return rid if isinstance(rid, str) else None
 
 
-@router.get("", response_model=Page)
+@router.get("", response_model=PageOf[PipelineRunOut])
 def list_runs(
     dataset_id: uuid.UUID | None = Query(default=None),
     state: str | None = Query(default=None),
@@ -50,7 +50,7 @@ def list_runs(
     return offset_page([run_view(r) for r in runs], req, total, s.pagination_count_cap)
 
 
-@router.get("/{run_id}")
+@router.get("/{run_id}", response_model=PipelineRunOut)
 def get_run(
     run_id: uuid.UUID,
     _p: Principal = Depends(require("pipeline.read")),
@@ -61,7 +61,7 @@ def get_run(
     return run_view(run, services.jobs.metrics(db, run))
 
 
-@router.post("", status_code=202)
+@router.post("", status_code=202, response_model=PipelineAccepted)
 def start(
     body: StartPipeline,
     request: Request,
@@ -84,7 +84,7 @@ def retry_run(
     )
 
 
-@router.post("/{run_id}/retry", status_code=202)
+@router.post("/{run_id}/retry", status_code=202, response_model=PipelineAccepted)
 def retry(
     run_id: uuid.UUID,
     request: Request,

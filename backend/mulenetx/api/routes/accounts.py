@@ -10,7 +10,16 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from mulenetx.api.deps import Services, get_db, get_services, require
-from mulenetx.api.schemas.common import Page
+from mulenetx.api.schemas.responses import (
+    AccountOut,
+    AssessmentOut,
+    FeaturesOut,
+    PageOf,
+    PropagationOut,
+    ShapOut,
+    TemporalOut,
+    TransactionPage,
+)
 from mulenetx.auth.service import Principal
 from mulenetx.core import error_codes as ec
 from mulenetx.core.errors import AppError, limit_exceeded
@@ -32,7 +41,7 @@ def _utc(value: datetime | None, field: str) -> datetime | None:
         raise AppError(ec.VALIDATION_ERROR, "Timestamps must include a UTC offset.", {"field": field}) from exc
 
 
-@router.get("", response_model=Page)
+@router.get("", response_model=PageOf[AccountOut])
 def search_accounts(
     q: str | None = Query(default=None),
     risk_tier: str | None = Query(default=None),
@@ -53,7 +62,7 @@ def search_accounts(
     return offset_page(items, req, total, s.pagination_count_cap)
 
 
-@router.get("/{account_id}")
+@router.get("/{account_id}", response_model=AccountOut)
 def get_account(
     account_id: str,
     _p: Principal = Depends(require("account.read")),
@@ -62,7 +71,7 @@ def get_account(
     return account_repo.get(db, account_id)
 
 
-@router.get("/{account_id}/transactions")
+@router.get("/{account_id}/transactions", response_model=TransactionPage)
 def account_transactions(
     account_id: str,
     start: datetime | None = Query(default=None),
@@ -95,7 +104,7 @@ def account_transactions(
     )
 
 
-@router.get("/{account_id}/risk")
+@router.get("/{account_id}/risk", response_model=AssessmentOut)
 def account_risk(
     account_id: str,
     scoring_run_id: uuid.UUID | None = Query(default=None),
@@ -106,7 +115,7 @@ def account_risk(
     return risk_repo.risk(db, account_id, scoring_run_id)
 
 
-@router.get("/{account_id}/risk/history", response_model=Page)
+@router.get("/{account_id}/risk/history", response_model=PageOf[AssessmentOut])
 def account_risk_history(
     account_id: str,
     page: int | None = Query(default=None),
@@ -122,7 +131,7 @@ def account_risk_history(
     return offset_page(items, req, total, s.pagination_count_cap)
 
 
-@router.get("/{account_id}/risk/propagation")
+@router.get("/{account_id}/risk/propagation", response_model=PropagationOut)
 def account_risk_propagation(
     account_id: str,
     scoring_run_id: uuid.UUID | None = Query(default=None),
@@ -133,7 +142,7 @@ def account_risk_propagation(
     return risk_repo.propagation(db, account_id, scoring_run_id)
 
 
-@router.get("/{account_id}/features")
+@router.get("/{account_id}/features", response_model=FeaturesOut)
 def account_features(
     account_id: str,
     scoring_run_id: uuid.UUID | None = Query(default=None),
@@ -144,7 +153,7 @@ def account_features(
     return risk_repo.features(db, account_id, scoring_run_id)
 
 
-@router.get("/{account_id}/temporal")
+@router.get("/{account_id}/temporal", response_model=TemporalOut)
 def account_temporal(
     account_id: str,
     scoring_run_id: uuid.UUID | None = Query(default=None),
@@ -155,7 +164,7 @@ def account_temporal(
     return risk_repo.temporal(db, account_id, scoring_run_id)
 
 
-@router.get("/{account_id}/shap")
+@router.get("/{account_id}/shap", response_model=ShapOut)
 def account_shap(
     account_id: str,
     assessment_id: uuid.UUID | None = Query(default=None),

@@ -134,4 +134,5 @@ def require(permission: str) -> Callable[..., Principal]:
         return principal
 
     dependency.__name__ = f"require_{permission.replace('.', '_')}"
+    dependency.permission = permission  # type: ignore[attr-defined]  # read by the OpenAPI annotation
     return dependency

@@ -133,11 +133,20 @@ def cmd_ingest(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_export_openapi(args: argparse.Namespace) -> int:
+    from mulenetx.openapi import write_openapi
+
+    path = write_openapi(args.out)
+    print(f"wrote {path}")
+    return 0
+
+
 COMMANDS: dict[str, tuple[Callable[[argparse.Namespace], int], str]] = {
     "ingest": (cmd_ingest, "register a server-side CSV (same contract as POST /api/v1/ingestion)"),
     "bootstrap-admin": (cmd_bootstrap_admin, "create the first ADMIN from the environment (refuses if one exists)"),
     "migrate-neo4j": (cmd_migrate_neo4j, "create the Neo4j constraints and indexes (SRS §6.8.1)"),
     "check-schema": (cmd_check_schema, "exit 1 unless the database schema version equals the code head"),
+    "export-openapi": (cmd_export_openapi, "write the OpenAPI document (default docs/openapi.json)"),
 }
 
 
@@ -155,13 +164,16 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--adapter", default="paysim-v1")
             p.add_argument("--adapter-config", default=None)
             p.add_argument("--allow-large", action="store_true")
+        if name == "export-openapi":
+            p.add_argument("--out", default="../docs/openapi.json")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    configure_logging(get_settings().log_level)
+    if args.command != "export-openapi":  # the export needs no environment
+        configure_logging(get_settings().log_level)
     fn, _ = COMMANDS[args.command]
     return fn(args)
 
