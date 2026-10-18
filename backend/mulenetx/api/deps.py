@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from fastapi import Depends, Request
 from sqlalchemy.orm import Session
@@ -19,6 +19,9 @@ from mulenetx.core.logging import user_id_var
 from mulenetx.core.runtime import Runtime
 from mulenetx.ingestion.service import IngestionService
 from mulenetx.interventions.service import InterventionService
+
+if TYPE_CHECKING:
+    from mulenetx.copilot.service import CopilotService
 from mulenetx.investigation.service import InvestigationService
 from mulenetx.jobs.service import JobService
 
@@ -62,6 +65,13 @@ class Services:
     @property
     def investigation(self) -> InvestigationService:
         result: InvestigationService = self._get("investigation", lambda: InvestigationService(self.audit))
+        return result
+
+    @property
+    def copilot(self) -> CopilotService:
+        from mulenetx.copilot.service import CopilotService
+
+        result: CopilotService = self._get("copilot", lambda: CopilotService(self.runtime, self.audit))
         return result
 
     @property

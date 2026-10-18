@@ -10,10 +10,8 @@ import pytest
 
 from tests.openapiutil import SRS, document, norm, operations, srs_aliases, srs_rows
 
-NOT_YET: set[tuple[str, str]] = {
-    ("POST", "/api/v1/copilot/query"),  # T40
-}
-NOT_YET_ALIASES: set[tuple[str, str]] = {}
+NOT_YET: set[tuple[str, str]] = set()
+NOT_YET_ALIASES: set[tuple[str, str]] = set()
 
 
 def test_srs_matrix_parsed() -> None:

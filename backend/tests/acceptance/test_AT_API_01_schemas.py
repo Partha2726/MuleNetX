@@ -160,6 +160,11 @@ def test_AT_API_01_every_endpoint(app, client, users) -> None:
     summary_alias = call("GET", "/api/v1/evaluation/summary", "/api/v1/evaluation/summary", 200)
     assert summary_alias.headers["deprecation"] == "true"
     call("GET", "/api/v1/evaluation/{level}", "/api/v1/evaluation/network", 200)
+    from tests.copilotutil import install
+
+    install(app)
+    question = {"question": "Why is this account risky?", "account_id": acc}
+    call("POST", "/api/v1/copilot/query", "/api/v1/copilot/query", 200, json=question)
 
     nb = call(
         "GET", "/api/v1/graph/neighborhood", "/api/v1/graph/neighborhood", 200, params={"account_id": acc, "depth": 2}

@@ -399,6 +399,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/copilot/query": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Query */
+        post: operations["query_api_v1_copilot_query_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/datasets/{dataset_id}/profile": {
         parameters: {
             query?: never;
@@ -1382,6 +1399,72 @@ export interface components {
             updated_at: string | null;
             /** Updated By Pipeline Run Id */
             updated_by_pipeline_run_id: string | null;
+        };
+        /** CopilotItem */
+        CopilotItem: {
+            /** Refs */
+            refs: string[];
+            /** Text */
+            text: string;
+        };
+        /** CopilotModel */
+        CopilotModel: {
+            /** Model */
+            model: string;
+            /** Model Digest */
+            model_digest: string | null;
+            /**
+             * Provider
+             * @constant
+             */
+            provider: "ollama";
+        };
+        /** CopilotQuery */
+        CopilotQuery: {
+            /** Account Id */
+            account_id?: string | null;
+            /** Case Id */
+            case_id?: string | null;
+            /** Context Options */
+            context_options?: {
+                [key: string]: boolean;
+            } | null;
+            /** Question */
+            question: string;
+            /** Ring Id */
+            ring_id?: string | null;
+        };
+        /** CopilotResponse */
+        CopilotResponse: {
+            /** Ai Generated */
+            ai_generated: boolean;
+            /** Context Id */
+            context_id: string | null;
+            /** Facts */
+            facts: components["schemas"]["CopilotItem"][];
+            /** Generated At */
+            generated_at: string;
+            /**
+             * Intent
+             * @enum {string}
+             */
+            intent: "ACCOUNT_SUMMARY" | "RISK_EXPLANATION" | "GRAPH_CONTEXT" | "TEMPORAL_CONTEXT" | "MONEY_FLOW" | "RING_SUMMARY" | "CASE_SUMMARY" | "UNSUPPORTED";
+            /**
+             * Label
+             * @constant
+             */
+            label: "AI INTERPRETATION";
+            /** Limitations */
+            limitations: string[];
+            model: components["schemas"]["CopilotModel"] | null;
+            /** Observed Signals */
+            observed_signals: components["schemas"]["CopilotItem"][];
+            /** Possible Interpretation */
+            possible_interpretation: components["schemas"]["CopilotItem"][];
+            /** Request Id */
+            request_id: string;
+            /** Source References */
+            source_references: string[];
         };
         /** ErrorBody */
         ErrorBody: {
@@ -3902,6 +3985,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ContextOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    query_api_v1_copilot_query_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CopilotQuery"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CopilotResponse"];
                 };
             };
             /** @description Error envelope (SRS §19.3) */

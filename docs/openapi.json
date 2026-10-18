@@ -1068,6 +1068,233 @@
         "title": "ContextOut",
         "type": "object"
       },
+      "CopilotItem": {
+        "additionalProperties": false,
+        "properties": {
+          "refs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Refs",
+            "type": "array"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "refs"
+        ],
+        "title": "CopilotItem",
+        "type": "object"
+      },
+      "CopilotModel": {
+        "additionalProperties": false,
+        "properties": {
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "model_digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Digest"
+          },
+          "provider": {
+            "const": "ollama",
+            "title": "Provider",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "model",
+          "model_digest"
+        ],
+        "title": "CopilotModel",
+        "type": "object"
+      },
+      "CopilotQuery": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "anyOf": [
+              {
+                "maxLength": 160,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Account Id"
+          },
+          "case_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Case Id"
+          },
+          "context_options": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "boolean"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context Options"
+          },
+          "question": {
+            "minLength": 1,
+            "title": "Question",
+            "type": "string"
+          },
+          "ring_id": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ring Id"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "title": "CopilotQuery",
+        "type": "object"
+      },
+      "CopilotResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "ai_generated": {
+            "title": "Ai Generated",
+            "type": "boolean"
+          },
+          "context_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context Id"
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/CopilotItem"
+            },
+            "title": "Facts",
+            "type": "array"
+          },
+          "generated_at": {
+            "title": "Generated At",
+            "type": "string"
+          },
+          "intent": {
+            "enum": [
+              "ACCOUNT_SUMMARY",
+              "RISK_EXPLANATION",
+              "GRAPH_CONTEXT",
+              "TEMPORAL_CONTEXT",
+              "MONEY_FLOW",
+              "RING_SUMMARY",
+              "CASE_SUMMARY",
+              "UNSUPPORTED"
+            ],
+            "title": "Intent",
+            "type": "string"
+          },
+          "label": {
+            "const": "AI INTERPRETATION",
+            "title": "Label",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CopilotModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "observed_signals": {
+            "items": {
+              "$ref": "#/components/schemas/CopilotItem"
+            },
+            "title": "Observed Signals",
+            "type": "array"
+          },
+          "possible_interpretation": {
+            "items": {
+              "$ref": "#/components/schemas/CopilotItem"
+            },
+            "title": "Possible Interpretation",
+            "type": "array"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "source_references": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source References",
+            "type": "array"
+          }
+        },
+        "required": [
+          "request_id",
+          "intent",
+          "facts",
+          "observed_signals",
+          "possible_interpretation",
+          "limitations",
+          "source_references",
+          "model",
+          "context_id",
+          "generated_at",
+          "ai_generated",
+          "label"
+        ],
+        "title": "CopilotResponse",
+        "type": "object"
+      },
       "ErrorBody": {
         "additionalProperties": false,
         "properties": {
@@ -7995,6 +8222,48 @@
           "context"
         ],
         "x-permission": "account.read"
+      }
+    },
+    "/api/v1/copilot/query": {
+      "post": {
+        "operationId": "query_api_v1_copilot_query_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CopilotQuery"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CopilotResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Query",
+        "tags": [
+          "copilot"
+        ],
+        "x-permission": "copilot.use"
       }
     },
     "/api/v1/datasets/{dataset_id}/profile": {

@@ -122,4 +122,5 @@ ENDPOINTS: list[Endpoint] = [
     Endpoint("GET", "/api/v1/evaluation/runs/{id}/{level}", "evaluation.read"),
     Endpoint("GET", "/api/v1/evaluation/summary", "evaluation.read"),
     Endpoint("GET", "/api/v1/evaluation/{level}", "evaluation.read"),
+    Endpoint("POST", "/api/v1/copilot/query", "copilot.use", {"question": "q"}),
 ]

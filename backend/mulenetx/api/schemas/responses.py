@@ -710,6 +710,41 @@ class EvaluationPage(PageOf[EvaluationRunOut]):
     pass
 
 
+class CopilotItem(Out):
+    text: str
+    refs: list[str]
+
+
+class CopilotModel(Out):
+    provider: Literal["ollama"]
+    model: str
+    model_digest: str | None
+
+
+class CopilotResponse(Out):
+    request_id: str
+    intent: Literal[
+        "ACCOUNT_SUMMARY",
+        "RISK_EXPLANATION",
+        "GRAPH_CONTEXT",
+        "TEMPORAL_CONTEXT",
+        "MONEY_FLOW",
+        "RING_SUMMARY",
+        "CASE_SUMMARY",
+        "UNSUPPORTED",
+    ]
+    facts: list[CopilotItem]
+    observed_signals: list[CopilotItem]
+    possible_interpretation: list[CopilotItem]
+    limitations: list[str]
+    source_references: list[str]
+    model: CopilotModel | None
+    context_id: str | None
+    generated_at: str
+    ai_generated: bool
+    label: Literal["AI INTERPRETATION"]
+
+
 # ── cases, audit ────────────────────────────────────────────────────────────
 
 
