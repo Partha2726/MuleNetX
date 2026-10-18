@@ -4,7 +4,7 @@ TEST_COMPOSE := docker compose -f docker-compose.test.yml -p mulenetx-test
 UV := cd backend && uv run
 
 .PHONY: up down logs migrate test test-backend test-frontend test-acceptance test-e2e lint typecheck \
-        bench openapi gen-types traceability demo test-services test-services-down e2e-stack e2e-stack-down
+        bench openapi gen-types traceability demo test-services test-services-down e2e-stack e2e-stack-down demo-down
 
 up:
 	$(COMPOSE) up --build -d
@@ -73,5 +73,13 @@ gen-types: openapi
 traceability:
 	$(UV) python ../scripts/check_traceability.py
 
+# The 16 demonstration scenarios of SRS §29 on a clean throwaway stack (project mulenetx-demo, own volumes,
+# usual ports; the main stack is stopped first). Leaves the stack up to explore; `make demo-down` removes it.
 demo:
-	$(UV) python ../scripts/demo.py
+	$(COMPOSE) stop
+	$(COMPOSE) -p mulenetx-demo up --build -d --wait postgres neo4j backend worker dashboard
+	$(COMPOSE) -p mulenetx-demo exec -T backend python -m mulenetx.cli bootstrap-admin
+	$(UV) python ../scripts/demo.py --project mulenetx-demo
+
+demo-down:
+	$(COMPOSE) -p mulenetx-demo down -v
