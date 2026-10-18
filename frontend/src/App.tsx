@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Layout } from "./components/Layout";
+import { AccountSearch } from "./pages/AccountSearch";
+import { AccountWorkspace } from "./pages/AccountWorkspace";
 import { Login } from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
 import { useSession } from "./state/session";
@@ -24,6 +26,8 @@ export function App() {
           </RequireSession>
         }
       >
+        <Route path="accounts" element={<AccountSearch />} />
+        <Route path="accounts/:id" element={<AccountWorkspace />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
