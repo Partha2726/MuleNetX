@@ -14,6 +14,7 @@ import { useApi } from "../lib/useApi";
 import { useSession } from "../state/session";
 import { StatusChip } from "./Cases";
 import p from "./page.module.css";
+import { CopilotPanel } from "../components/CopilotPanel";
 import s from "./CaseDetail.module.css";
 
 const TRANSITION_LABEL: Partial<Record<CaseStatus, string>> = {
@@ -393,6 +394,9 @@ export function CaseDetail() {
               <div className={s.body}>
                 <Subjects c={current} />
                 <Findings c={current} />
+                <div className={s.wide}>
+                  <CopilotPanel scope={{ case_id: current.case_id }} kind="case" />
+                </div>
               </div>
             </>
           )

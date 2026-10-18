@@ -55,6 +55,10 @@
   padding: var(--sp-4) var(--sp-5) var(--sp-6);
   align-items: start;
 }
+.wide {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
 .finding {
   display: flex;
   flex-direction: column;

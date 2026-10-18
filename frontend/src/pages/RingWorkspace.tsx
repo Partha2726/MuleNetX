@@ -7,6 +7,7 @@ import type { Ring } from "../api/types";
 import { AccountLink, Paginator, ScoreBar, TierChip } from "../components/bits";
 import { EvidenceLabel } from "../components/EvidenceLabel";
 import { LineageBadge } from "../components/LineageBadge";
+import { CopilotPanel } from "../components/CopilotPanel";
 import { MotifPanel } from "../components/MotifPanel";
 import { StaleBanner, StateView } from "../components/StateView";
 import ui from "../components/ui.module.css";
@@ -362,7 +363,7 @@ function Evidence({ ring }: { ring: Ring }) {
   );
 }
 
-const TABS = ["overview", "members", "transactions", "motifs", "evidence"] as const;
+const TABS = ["overview", "members", "transactions", "motifs", "evidence", "copilot"] as const;
 
 export function RingWorkspace() {
   const { id = "" } = useParams();
@@ -460,6 +461,7 @@ export function RingWorkspace() {
                 {tab === "transactions" && <Transactions ring={ring} />}
                 {tab === "motifs" && <MotifPanel load={(q, sig) => ringService.motifs(ring.ring_id, q, sig)} deps={[ring.ring_id]} />}
                 {tab === "evidence" && potential && <Evidence ring={ring} />}
+                {tab === "copilot" && <CopilotPanel scope={{ ring_id: ring.ring_id }} kind="ring" />}
                 {tab === "evidence" && !potential && <Link to={`/rings/${ring.ring_id}`}>Back to overview</Link>}
               </div>
             </>

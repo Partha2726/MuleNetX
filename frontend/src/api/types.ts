@@ -55,6 +55,8 @@ export type InterventionCandidatePage = S["InterventionCandidatePage"];
 export type EvaluationRun = S["EvaluationRunOut"];
 export type EvaluationSummary = S["EvaluationSummaryOut"];
 export type EvaluationMetric = S["EvaluationMetricOut"];
+export type CopilotResponse = S["CopilotResponse"];
+export type CopilotItem = S["CopilotItem"];
 
 export interface Page<T> {
   items: T[];
