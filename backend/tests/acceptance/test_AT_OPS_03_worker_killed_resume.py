@@ -143,7 +143,9 @@ def test_AT_OPS_03_docker(tmp_path: Path) -> None:
             data={
                 "name": f"ops3 {time.time_ns()}",
                 "source": "test",
-                "dataset_version": "v1",
+                # the file is identical on every run; a new version keeps a rerun on the same stack from
+                # being (correctly) refused as DATASET_ALREADY_REGISTERED
+                "dataset_version": f"v{time.time_ns()}",
                 "schema_version": "paysim-1",
                 "adapter": "paysim-v1",
             },
