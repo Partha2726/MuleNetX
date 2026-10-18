@@ -450,6 +450,31 @@ class AccountCommunityOut(CommunityDetailOut):
     account_id: str
 
 
+class MotifOut(Out):
+    motif_id: str
+    motif_type: Literal[
+        "RAPID_PASS_THROUGH", "FAN_IN", "FAN_OUT", "CIRCULAR_FLOW", "LAYERED_MOVEMENT", "BURST_ACTIVITY"
+    ]
+    anchor_account_id: str
+    start_time: str
+    end_time: str
+    temporal_window_seconds: int
+    participating_account_ids: list[str]
+    participating_transaction_ids: list[str]
+    transaction_count: int
+    motif_confidence: float
+    confidence_components: dict[str, Any]
+    order_ambiguous: bool
+    truncated: bool
+    evidence: dict[str, Any]
+    detector_version: str | None
+    analytics_version: str
+
+
+class MotifPage(PageOf[MotifOut], Lineaged):
+    interpretation: str
+
+
 # ── cases, audit ────────────────────────────────────────────────────────────
 
 

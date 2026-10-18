@@ -11,7 +11,6 @@ import pytest
 from tests.openapiutil import SRS, document, norm, operations, srs_aliases, srs_rows
 
 NOT_YET: set[tuple[str, str]] = {
-    ("GET", "/api/v1/accounts/{id}/motifs"),  # T31
     ("GET", "/api/v1/rings"),  # T34
     ("GET", "/api/v1/rings/{id}"),
     ("PATCH", "/api/v1/rings/{id}/status"),
@@ -20,7 +19,6 @@ NOT_YET: set[tuple[str, str]] = {
     ("GET", "/api/v1/rings/{id}/features"),
     ("GET", "/api/v1/rings/{id}/risk"),
     ("GET", "/api/v1/rings/{id}/evidence"),
-    ("GET", "/api/v1/rings/{id}/motifs"),  # T31 route, T34 enabled
     ("POST", "/api/v1/rings/{id}/interventions/simulate"),  # T37
     ("GET", "/api/v1/rings/{id}/interventions"),
     ("GET", "/api/v1/interventions/{id}"),

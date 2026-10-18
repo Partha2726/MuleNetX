@@ -127,6 +127,9 @@ def test_AT_API_01_every_endpoint(app, client, users) -> None:
     call("GET", "/api/v1/accounts/{id}/temporal", f"{a}/temporal", 200)
     call("GET", "/api/v1/accounts/{id}/shap", f"{a}/shap", 200, params={"assessment_id": risk["assessment_id"]})
     call("GET", "/api/v1/accounts/{id}/community", f"{a}/community", 200)
+    call("GET", "/api/v1/accounts/{id}/motifs", f"{a}/motifs", 200)
+    # rings exist from T34; until then every ring id is unknown (documented 404 with the error envelope)
+    call("GET", "/api/v1/rings/{id}/motifs", "/api/v1/rings/00000000-0000-4000-8000-000000000000/motifs", 404)
 
     nb = call(
         "GET", "/api/v1/graph/neighborhood", "/api/v1/graph/neighborhood", 200, params={"account_id": acc, "depth": 2}

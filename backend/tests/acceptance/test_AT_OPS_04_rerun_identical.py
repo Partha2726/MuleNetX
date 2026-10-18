@@ -62,10 +62,25 @@ def test_AT_OPS_04_rerun_identical(app, client, users) -> None:
                 )
             }
 
+        def motifs(run):  # type: ignore[no-untyped-def]
+            return {
+                (r.motif_id, r.motif_type, r.motif_confidence)
+                for r in conn.execute(
+                    text(
+                        "SELECT m.motif_id, m.motif_type, m.motif_confidence FROM temporal_motifs m "
+                        "JOIN analytics_runs a ON a.graph_snapshot_id = m.graph_snapshot_id "
+                        "AND a.analytics_version = m.analytics_version WHERE a.analytics_run_id = :r"
+                    ),
+                    {"r": run},
+                )
+            }
+
+        m1, m2 = motifs(first["analytics_run_id"]), motifs(second["analytics_run_id"])
         c1, c2 = communities(first["analytics_run_id"]), communities(second["analytics_run_id"])
         s1, s2 = scores(first["scoring_run_id"]), scores(second["scoring_run_id"])
         f1, f2 = features(first["analytics_run_id"]), features(second["analytics_run_id"])
     assert c1 == c2 and len(c1) > 1
+    assert m1 == m2 and len(m1) > 0
     assert s1.keys() == s2.keys() and len(s1) > 100
     assert s1 == s2
     assert f1.keys() == f2.keys()

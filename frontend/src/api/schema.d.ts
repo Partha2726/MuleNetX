@@ -72,6 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/accounts/{account_id}/motifs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Account Motifs */
+        get: operations["account_motifs_api_v1_accounts__account_id__motifs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/accounts/{account_id}/risk": {
         parameters: {
             query?: never;
@@ -622,6 +639,23 @@ export interface paths {
         put?: never;
         /** Retry */
         post: operations["retry_api_v1_pipeline_runs__run_id__retry_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/motifs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ring Motifs */
+        get: operations["ring_motifs_api_v1_rings__ring_id__motifs_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1305,6 +1339,68 @@ export interface components {
             training_snapshot_ids: {
                 [key: string]: unknown;
             };
+        };
+        /** MotifOut */
+        MotifOut: {
+            /** Analytics Version */
+            analytics_version: string;
+            /** Anchor Account Id */
+            anchor_account_id: string;
+            /** Confidence Components */
+            confidence_components: {
+                [key: string]: unknown;
+            };
+            /** Detector Version */
+            detector_version: string | null;
+            /** End Time */
+            end_time: string;
+            /** Evidence */
+            evidence: {
+                [key: string]: unknown;
+            };
+            /** Motif Confidence */
+            motif_confidence: number;
+            /** Motif Id */
+            motif_id: string;
+            /**
+             * Motif Type
+             * @enum {string}
+             */
+            motif_type: "RAPID_PASS_THROUGH" | "FAN_IN" | "FAN_OUT" | "CIRCULAR_FLOW" | "LAYERED_MOVEMENT" | "BURST_ACTIVITY";
+            /** Order Ambiguous */
+            order_ambiguous: boolean;
+            /** Participating Account Ids */
+            participating_account_ids: string[];
+            /** Participating Transaction Ids */
+            participating_transaction_ids: string[];
+            /** Start Time */
+            start_time: string;
+            /** Temporal Window Seconds */
+            temporal_window_seconds: number;
+            /** Transaction Count */
+            transaction_count: number;
+            /** Truncated */
+            truncated: boolean;
+        };
+        /** MotifPage */
+        MotifPage: {
+            /** Computed At */
+            computed_at: string | null;
+            /** Interpretation */
+            interpretation: string;
+            /** Is Stale */
+            is_stale: boolean;
+            /** Items */
+            items: components["schemas"]["MotifOut"][];
+            lineage: components["schemas"]["LineageOut"];
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Total */
+            total: number;
+            /** Total Is Capped */
+            total_is_capped: boolean;
         };
         /** NeighborhoodEdge */
         NeighborhoodEdge: {
@@ -2057,6 +2153,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FeaturesOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    account_motifs_api_v1_accounts__account_id__motifs_get: {
+        parameters: {
+            query?: {
+                type?: string | null;
+                start?: string | null;
+                end?: string | null;
+                analytics_run_id?: string | null;
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MotifPage"];
                 };
             };
             /** @description Error envelope (SRS §19.3) */
@@ -3318,6 +3452,43 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PipelineAccepted"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    ring_motifs_api_v1_rings__ring_id__motifs_get: {
+        parameters: {
+            query?: {
+                type?: string | null;
+                start?: string | null;
+                end?: string | null;
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MotifPage"];
                 };
             };
             /** @description Error envelope (SRS §19.3) */

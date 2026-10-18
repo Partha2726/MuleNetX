@@ -1978,6 +1978,181 @@
         "title": "ModelOut",
         "type": "object"
       },
+      "MotifOut": {
+        "additionalProperties": false,
+        "properties": {
+          "analytics_version": {
+            "title": "Analytics Version",
+            "type": "string"
+          },
+          "anchor_account_id": {
+            "title": "Anchor Account Id",
+            "type": "string"
+          },
+          "confidence_components": {
+            "additionalProperties": true,
+            "title": "Confidence Components",
+            "type": "object"
+          },
+          "detector_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detector Version"
+          },
+          "end_time": {
+            "title": "End Time",
+            "type": "string"
+          },
+          "evidence": {
+            "additionalProperties": true,
+            "title": "Evidence",
+            "type": "object"
+          },
+          "motif_confidence": {
+            "title": "Motif Confidence",
+            "type": "number"
+          },
+          "motif_id": {
+            "title": "Motif Id",
+            "type": "string"
+          },
+          "motif_type": {
+            "enum": [
+              "RAPID_PASS_THROUGH",
+              "FAN_IN",
+              "FAN_OUT",
+              "CIRCULAR_FLOW",
+              "LAYERED_MOVEMENT",
+              "BURST_ACTIVITY"
+            ],
+            "title": "Motif Type",
+            "type": "string"
+          },
+          "order_ambiguous": {
+            "title": "Order Ambiguous",
+            "type": "boolean"
+          },
+          "participating_account_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Participating Account Ids",
+            "type": "array"
+          },
+          "participating_transaction_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Participating Transaction Ids",
+            "type": "array"
+          },
+          "start_time": {
+            "title": "Start Time",
+            "type": "string"
+          },
+          "temporal_window_seconds": {
+            "title": "Temporal Window Seconds",
+            "type": "integer"
+          },
+          "transaction_count": {
+            "title": "Transaction Count",
+            "type": "integer"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "motif_id",
+          "motif_type",
+          "anchor_account_id",
+          "start_time",
+          "end_time",
+          "temporal_window_seconds",
+          "participating_account_ids",
+          "participating_transaction_ids",
+          "transaction_count",
+          "motif_confidence",
+          "confidence_components",
+          "order_ambiguous",
+          "truncated",
+          "evidence",
+          "detector_version",
+          "analytics_version"
+        ],
+        "title": "MotifOut",
+        "type": "object"
+      },
+      "MotifPage": {
+        "additionalProperties": false,
+        "properties": {
+          "computed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "interpretation": {
+            "title": "Interpretation",
+            "type": "string"
+          },
+          "is_stale": {
+            "title": "Is Stale",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MotifOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "lineage": {
+            "$ref": "#/components/schemas/LineageOut"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_is_capped": {
+            "title": "Total Is Capped",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "lineage",
+          "computed_at",
+          "is_stale",
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_is_capped",
+          "interpretation"
+        ],
+        "title": "MotifPage",
+        "type": "object"
+      },
       "NeighborhoodEdge": {
         "additionalProperties": false,
         "properties": {
@@ -4263,6 +4438,146 @@
           "accounts"
         ],
         "x-permission": "risk.read"
+      }
+    },
+    "/api/v1/accounts/{account_id}/motifs": {
+      "get": {
+        "operationId": "account_motifs_api_v1_accounts__account_id__motifs_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "analytics_run_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Analytics Run Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MotifPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Account Motifs",
+        "tags": [
+          "motifs"
+        ],
+        "x-permission": "motif.read"
       }
     },
     "/api/v1/accounts/{account_id}/risk": {
@@ -6834,6 +7149,129 @@
           "pipelines"
         ],
         "x-permission": "pipeline.control"
+      }
+    },
+    "/api/v1/rings/{ring_id}/motifs": {
+      "get": {
+        "operationId": "ring_motifs_api_v1_rings__ring_id__motifs_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "title": "Ring Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MotifPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Ring Motifs",
+        "tags": [
+          "motifs"
+        ],
+        "x-permission": "motif.read"
       }
     },
     "/api/v1/users": {

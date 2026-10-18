@@ -19,6 +19,8 @@ from mulenetx.analytics.projection import Projection, export
 from mulenetx.core.config import Settings
 from mulenetx.core.runtime import Runtime
 from mulenetx.core.timeutil import utcnow
+from mulenetx.motifs import service as motifs
+from mulenetx.motifs.common import Instance
 
 ENGINE = "NETWORKX"
 
@@ -40,7 +42,7 @@ def algorithm_configuration(settings: Settings) -> dict[str, Any]:
         },
         "projection_order": "nodes by account_id; edges by (source, destination); self-pairs excluded",
         "normalization": {"pagerank_norm": "snapshot min-max; constant series -> 0"},
-        "motifs": None,
+        "motifs": motifs.configuration(settings),
     }
 
 
@@ -62,7 +64,7 @@ class AnalyticsService:
 
     def compute(
         self, snapshot_id: uuid.UUID, dataset_id: uuid.UUID, cutoff: datetime
-    ) -> tuple[Projection, dict[str, AccountMetrics], list[Community], dict[str, Any], str]:
+    ) -> tuple[Projection, dict[str, AccountMetrics], list[Community], dict[str, Any], str, list[Instance]]:
         s = self.rt.settings
         configuration = algorithm_configuration(s)
         version = analytics_version(configuration)
@@ -70,16 +72,17 @@ class AnalyticsService:
         cfg = AlgorithmConfig(s.pagerank_damping, s.pagerank_max_iterations, s.pagerank_tolerance)
         metrics = compute_metrics(proj, cfg)
         communities = canonical_communities(proj, snapshot_id, version, s.louvain_resolution, s.louvain_seed)
-        return proj, metrics, communities, configuration, version
+        found = motifs.detect(motifs.load_transactions(self.rt.engine, dataset_id, cutoff), s)
+        return proj, metrics, communities, configuration, version, found
 
     def run(
         self, snapshot_id: uuid.UUID, dataset_id: uuid.UUID, cutoff: datetime, analytics_run_id: uuid.UUID | None = None
     ) -> AnalyticsResult:
         started = utcnow()
-        _proj, metrics, communities, configuration, version = self.compute(snapshot_id, dataset_id, cutoff)
+        _proj, metrics, communities, configuration, version, found = self.compute(snapshot_id, dataset_id, cutoff)
         run_id = analytics_run_id or uuid.uuid4()
-        configuration = {**configuration, "community_count": len(communities)}
-        persist(self.rt, run_id, snapshot_id, version, configuration, started, metrics, communities)
+        configuration = {**configuration, "community_count": len(communities), "motif_count": len(found)}
+        persist(self.rt, run_id, snapshot_id, version, configuration, started, metrics, communities, found)
         return AnalyticsResult(run_id, version, len(communities))
 
 
@@ -92,8 +95,10 @@ def persist(
     started: datetime,
     metrics: dict[str, AccountMetrics],
     communities: list[Community],
+    found: list[Instance] | None = None,
 ) -> None:
-    """One transaction: the SUCCEEDED analytics run, its communities, memberships and account metrics."""
+    """One transaction: the SUCCEEDED analytics run, its communities, memberships, account metrics and
+    temporal motifs."""
     now = utcnow()
     membership = {member: (c.community_id, len(c.members)) for c in communities for member in c.members}
     raw = rt.engine.raw_connection()
@@ -139,6 +144,20 @@ def persist(
                         csize,
                     )
                 )
+        # motif_id is deterministic per (snapshot, analytics_version, type, window, transactions) and is the
+        # table's key, so a rerun on the same snapshot re-derives identical rows: keep the first (OQ-75)
+        cur.execute("CREATE TEMP TABLE motif_load (LIKE temporal_motifs) ON COMMIT DROP")
+        with cur.copy(
+            "COPY motif_load (motif_id, analytics_run_id, graph_snapshot_id, motif_type, anchor_account_id, "
+            "start_time, end_time, temporal_window_seconds, participating_account_ids, participating_transaction_ids, "
+            "transaction_count, motif_confidence, order_ambiguous, evidence, analytics_version, computed_at) "
+            "FROM STDIN"
+        ) as copy:
+            for inst in found or []:
+                row = list(motifs.to_row(inst, snapshot_id, run_id, version, now))
+                row[8], row[9], row[13] = json.dumps(row[8]), json.dumps(row[9]), json.dumps(row[13])
+                copy.write_row(row)
+        cur.execute("INSERT INTO temporal_motifs SELECT * FROM motif_load ON CONFLICT (motif_id) DO NOTHING")
         raw.commit()
     except BaseException:
         raw.rollback()
