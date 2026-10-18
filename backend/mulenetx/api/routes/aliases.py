@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -44,3 +44,23 @@ def ingestion_retry(
         raise AppError(ec.NOT_FOUND, details={"resource": "ingestion"})
     response = retry_run(run_id, request, principal, db, services)
     return deprecate(response, f"/api/v1/pipeline-runs/{run_id}/retry")
+
+
+@router.get("/money-flow", deprecated=True)
+def money_flow(
+    source_account_id: str = Query(...),
+    destination_account_id: str = Query(...),
+    mode: str = Query(default="SHORTEST"),
+    max_depth: int = Query(default=5),
+    max_results: int = Query(default=10),
+    graph_snapshot_id: uuid.UUID | None = Query(default=None),
+    _p: Principal = Depends(require("money_flow.read")),
+    db: Session = Depends(get_db),
+    services: Services = Depends(get_services),
+) -> JSONResponse:
+    from mulenetx.api.routes.graph import run_path_query
+
+    body = run_path_query(
+        source_account_id, destination_account_id, mode, max_depth, max_results, graph_snapshot_id, db, services
+    )
+    return deprecate(JSONResponse(content=body), "/api/v1/graph/path")

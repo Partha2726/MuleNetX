@@ -80,3 +80,17 @@ WHERE r.snapshot_id = $sid AND b.account_id IN $ids
 RETURN a.account_id AS src, b.account_id AS dst, r.tx_count AS tx_count, r.total_amount_micros AS micros,
        r.first_ts AS first_ts, r.last_ts AS last_ts
 """
+
+OUT_NEIGHBORS: Final[str] = """
+UNWIND $ids AS id
+MATCH (a:Account {snapshot_key: $sid + ':' + id})-[r:TRANSFERRED_TO]->(b:Account)
+WHERE r.snapshot_id = $sid
+RETURN id AS src, b.account_id AS dst, r.total_amount_micros AS micros, r.tx_count AS tx_count
+"""
+
+IN_NEIGHBORS: Final[str] = """
+UNWIND $ids AS id
+MATCH (b:Account)-[r:TRANSFERRED_TO]->(a:Account {snapshot_key: $sid + ':' + id})
+WHERE r.snapshot_id = $sid
+RETURN b.account_id AS src, id AS dst, r.total_amount_micros AS micros, r.tx_count AS tx_count
+"""
