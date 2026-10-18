@@ -23,7 +23,12 @@ class Endpoint:
 
     @property
     def url(self) -> str:
-        return self.path.replace("{id}", PLACEHOLDER).replace("{version}", "v0")
+        return (
+            self.path.replace("{id}", PLACEHOLDER)
+            .replace("{version}", "v0")
+            .replace("{type}", "ACCOUNT")
+            .replace("{subject_id}", "x")
+        )
 
 
 ENDPOINTS: list[Endpoint] = [
@@ -77,4 +82,20 @@ ENDPOINTS: list[Endpoint] = [
     Endpoint("GET", "/api/v1/communities", "community.read"),
     Endpoint("GET", "/api/v1/communities/{id}", "community.read"),
     Endpoint("GET", "/api/v1/accounts/{id}/community", "community.read"),
+    Endpoint("GET", "/api/v1/cases", "case.read"),
+    Endpoint("POST", "/api/v1/cases", "case.create", {"title": "t", "priority": "LOW"}),
+    Endpoint("GET", "/api/v1/cases/{id}", "case.read"),
+    Endpoint("PATCH", "/api/v1/cases/{id}", "case.update", {"version": 1}),
+    Endpoint("GET", "/api/v1/cases/{id}/subjects", "case.read"),
+    Endpoint(
+        "POST", "/api/v1/cases/{id}/subjects", "case_subject.manage", {"subject_type": "ACCOUNT", "subject_id": "x"}
+    ),
+    Endpoint("DELETE", "/api/v1/cases/{id}/subjects/{type}/{subject_id}", "case_subject.manage"),
+    Endpoint(
+        "POST",
+        "/api/v1/cases/{id}/findings",
+        "finding.create",
+        {"type": "t", "description": "d", "evidence": [], "source": "s"},
+    ),
+    Endpoint("GET", "/api/v1/cases/{id}/findings", "case.read"),
 ]

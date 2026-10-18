@@ -8,6 +8,7 @@ from mulenetx.api.routes import (
     accounts,
     aliases,
     auth,
+    cases,
     communities,
     context,
     graph,
@@ -30,4 +31,5 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(accounts.router)
     app.include_router(graph.router)
     app.include_router(communities.router)
+    app.include_router(cases.router)
     app.include_router(aliases.router)
