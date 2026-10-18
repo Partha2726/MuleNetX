@@ -80,9 +80,13 @@ def test_failure_and_retry_resumes_stage(app, client, users) -> None:
     runner = _runner(app)
     for _ in range(40):
         runner.tick()
+        # let the claimed jobs finish before reading the state, so no later stage is claimed past PROFILED
+        for running in list(runner.running.values()):
+            running.future.result(timeout=30)
         state = client.get(f"/api/v1/pipeline-runs/{run_id}", headers=admin.headers).json()["current_state"]
         if state == "PROFILED":
             break
+    assert state == "PROFILED"
     with rt.engine.begin() as conn:
         conn.execute(
             text("UPDATE ingestion_runs SET status='FAILED' WHERE ingestion_run_id=:i"), {"i": ds.ingestion_run_id}

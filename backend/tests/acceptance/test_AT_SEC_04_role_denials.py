@@ -1,5 +1,6 @@
 """AT-SEC-04: every DENY of the SRS §22.2 matrix returns 403 and writes a DENIED audit event, for every
-implemented endpoint guarded by that permission (grows with each task; completed in T43)."""
+endpoint guarded by that permission. The registry (tests/endpoints.py) covers every route (AT-SEC-01 checks
+that), and field and participant rules are in tests/security/test_case_mutation_matrix.py."""
 
 import pytest
 

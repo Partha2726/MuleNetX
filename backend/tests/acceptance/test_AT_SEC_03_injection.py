@@ -1,6 +1,7 @@
 """AT-SEC-03: SQL and Cypher injection payloads in queries and filters cause no injection or data escape.
 
-Covers every string parameter of the endpoints implemented so far; T43 extends it to the full API.
+These are the targeted cases; tests/security/test_injection_every_parameter.py sends the payloads to every
+string parameter of every operation in the OpenAPI document.
 """
 
 import pytest
