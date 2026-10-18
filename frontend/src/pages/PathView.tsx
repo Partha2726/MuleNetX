@@ -27,7 +27,7 @@ function Evidence({ path, snapshotId }: { path: Path; snapshotId: string }) {
                   {h.source_account_id} → {h.destination_account_id} · {int(h.transactions_total)} supporting transactions
                 </h3>
                 <div className={p.tableWrap}>
-                  <table className={ui.table}>
+                  <div className={ui.tableScroll}><table className={ui.table}>
                     <thead>
                       <tr>
                         <th>Time (UTC)</th>
@@ -46,7 +46,7 @@ function Evidence({ path, snapshotId }: { path: Path; snapshotId: string }) {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
               </Fragment>
             ))}

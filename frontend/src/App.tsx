@@ -15,6 +15,8 @@ import { Communities, CommunityDetail } from "./pages/Communities";
 import { GraphExplorer } from "./pages/GraphExplorer";
 import { Login } from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
+import { Evaluation } from "./pages/Evaluation";
+import { InterventionSimulation } from "./pages/InterventionSimulation";
 import { PathView } from "./pages/PathView";
 import { RingWorkspace } from "./pages/RingWorkspace";
 import { Rings } from "./pages/Rings";
@@ -55,6 +57,8 @@ export function App() {
         <Route path="communities/:id" element={<CommunityDetail />} />
         <Route path="rings" element={<Rings />} />
         <Route path="rings/:id" element={<RingWorkspace />} />
+        <Route path="rings/:id/simulate" element={<InterventionSimulation />} />
+        <Route path="evaluation" element={<Evaluation />} />
         <Route path="cases" element={<Cases />} />
         <Route path="cases/:id" element={<CaseDetail />} />
         <Route path="admin/ingestion" element={<Ingestion />} />

@@ -34,7 +34,7 @@ type Tab = (typeof TABS)[number][0];
 function FeatureTable({ features }: { features: FeatureValue[] }) {
   return (
     <div className={p.tableWrap}>
-      <table className={ui.table}>
+      <div className={ui.tableScroll}><table className={ui.table}>
         <thead>
           <tr>
             <th>ID</th>
@@ -61,7 +61,7 @@ function FeatureTable({ features }: { features: FeatureValue[] }) {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     </div>
   );
 }
@@ -100,7 +100,7 @@ function RiskTab({ id, label }: { id: string; label: string }) {
               <>
                 <StaleBanner isStale={prop.is_stale} />
                 <div className={p.tableWrap}>
-                  <table className={ui.table}>
+                  <div className={ui.tableScroll}><table className={ui.table}>
                     <thead>
                       <tr>
                         <th>#</th>
@@ -125,7 +125,7 @@ function RiskTab({ id, label }: { id: string; label: string }) {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
               </>
             )}
@@ -138,7 +138,7 @@ function RiskTab({ id, label }: { id: string; label: string }) {
           <StateView result={history} empty="No earlier assessments.">
             {(page) => (
               <>
-                <table className={ui.table}>
+                <div className={ui.tableScroll}><table className={ui.table}>
                   <thead>
                     <tr>
                       <th>As of</th>
@@ -161,7 +161,7 @@ function RiskTab({ id, label }: { id: string; label: string }) {
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </table></div>
                 <Paginator page={page.page} pageSize={page.page_size} total={page.total} capped={page.total_is_capped} onPage={setHistoryPage} />
               </>
             )}
@@ -242,7 +242,7 @@ function TransactionsTab({ id }: { id: string }) {
           {(data) => (
             <>
               <div className={p.tableWrap}>
-                <table className={ui.table}>
+                <div className={ui.tableScroll}><table className={ui.table}>
                   <thead>
                     <tr>
                       <th>Time (UTC)</th>
@@ -277,7 +277,7 @@ function TransactionsTab({ id }: { id: string }) {
                       );
                     })}
                   </tbody>
-                </table>
+                </table></div>
               </div>
               <div className={ui.panelHead} style={{ borderTop: "1px solid var(--line)", borderBottom: 0 }}>
                 <span className={`${p.muted} ${p.small}`}>
@@ -372,7 +372,7 @@ function CommunityTab({ id }: { id: string }) {
                 {c.interpretation} {c.algorithm} {c.algorithm_version}.
               </p>
             </div>
-            <table className={ui.table}>
+            <div className={ui.tableScroll}><table className={ui.table}>
               <thead>
                 <tr>
                   <th>Member</th>
@@ -398,7 +398,7 @@ function CommunityTab({ id }: { id: string }) {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
             <Paginator page={c.members.page} pageSize={c.members.page_size} total={c.members.total} capped={c.members.total_is_capped} onPage={setPage} />
           </>
         )}

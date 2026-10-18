@@ -97,7 +97,7 @@ export function AccountSearch() {
             {(page) => (
               <>
                 <div className={p.tableWrap}>
-                  <table className={ui.table}>
+                  <div className={ui.tableScroll}><table className={ui.table}>
                     <thead>
                       <tr>
                         <th>Account</th>
@@ -128,7 +128,7 @@ export function AccountSearch() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
                 <Paginator page={page.page} pageSize={page.page_size} total={page.total} capped={page.total_is_capped} onPage={(n) => update({ page: String(n) })} />
               </>

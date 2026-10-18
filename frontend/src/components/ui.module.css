@@ -278,3 +278,7 @@
   border-color: var(--warn-line);
   color: var(--warn);
 }
+.tableScroll {
+  max-width: 100%;
+  overflow-x: auto;
+}

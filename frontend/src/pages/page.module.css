@@ -58,3 +58,8 @@
     padding: 0 var(--sp-3) var(--sp-5);
   }
 }
+/* flex children default to min-width: auto; a wide table inside would otherwise widen the page on phones */
+.body > *,
+.stack > * {
+  min-width: 0;
+}

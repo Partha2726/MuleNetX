@@ -38,7 +38,7 @@ export function Models() {
             {(data) => (
               <>
                 <div className={p.tableWrap}>
-                  <table className={ui.table}>
+                  <div className={ui.tableScroll}><table className={ui.table}>
                     <thead>
                       <tr>
                         <th>Version</th>
@@ -70,7 +70,7 @@ export function Models() {
                         );
                       })}
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
                 <Paginator page={data.page} pageSize={data.page_size} total={data.total} capped={data.total_is_capped} onPage={setPage} />
               </>
@@ -95,7 +95,7 @@ export function ModelDetail() {
               <PageHeader title={<span className="num">{m.model_version}</span>} lede={`${m.model_type} · feature ${m.feature_version} (${m.feature_regime}) · seed ${m.random_seed}`} actions={<EvidenceLabel kind="MODEL OUTPUT" />} />
               <div className={p.body}>
                 <div className={p.tableWrap}>
-                  <table className={ui.table}>
+                  <div className={ui.tableScroll}><table className={ui.table}>
                     <thead>
                       <tr>
                         <th>Metric</th>
@@ -118,7 +118,7 @@ export function ModelDetail() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
                 <dl className={ui.kv}>
                   <dt>Operating threshold</dt>

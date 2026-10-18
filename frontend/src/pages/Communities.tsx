@@ -28,7 +28,7 @@ export function Communities() {
                   <LineageBadge lineage={data.lineage} computedAt={data.computed_at} isStale={data.is_stale} />
                 </div>
                 <div className={p.tableWrap}>
-                  <table className={ui.table}>
+                  <div className={ui.tableScroll}><table className={ui.table}>
                     <thead>
                       <tr>
                         <th>Community</th>
@@ -53,7 +53,7 @@ export function Communities() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
                 <Paginator page={data.page} pageSize={data.page_size} total={data.total} capped={data.total_is_capped} onPage={setPage} />
               </>
@@ -103,7 +103,7 @@ export function CommunityDetail() {
                 <dd className="num">{dateTime(c.computed_at)} UTC</dd>
               </dl>
               <div className={ui.panel}>
-                <table className={ui.table}>
+                <div className={ui.tableScroll}><table className={ui.table}>
                   <thead>
                     <tr>
                       <th>Member</th>
@@ -128,7 +128,7 @@ export function CommunityDetail() {
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </table></div>
                 <Paginator page={c.members.page} pageSize={c.members.page_size} total={c.members.total} capped={c.members.total_is_capped} onPage={setPage} />
               </div>
             </div>

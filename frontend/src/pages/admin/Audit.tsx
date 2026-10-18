@@ -52,7 +52,7 @@ export function Audit() {
             {(data) => (
               <>
                 <div className={p.tableWrap}>
-                  <table className={ui.table}>
+                  <div className={ui.tableScroll}><table className={ui.table}>
                     <thead>
                       <tr>
                         <th>Time (UTC)</th>
@@ -81,7 +81,7 @@ export function Audit() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
                 <Paginator page={data.page} pageSize={data.page_size} total={data.total} capped={data.total_is_capped} onPage={(n) => setQuery({ ...query, page: n })} />
               </>

@@ -196,7 +196,7 @@ function Subjects({ c }: { c: Case }) {
       <StateView result={result} rows={4} empty="No subjects linked yet.">
         {(data) => (
           <>
-            <table className={ui.table}>
+            <div className={ui.tableScroll}><table className={ui.table}>
               <thead>
                 <tr>
                   <th>Type</th>
@@ -223,7 +223,7 @@ function Subjects({ c }: { c: Case }) {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
             <Paginator page={data.page} pageSize={data.page_size} total={data.total} capped={data.total_is_capped} onPage={setPage} />
           </>
         )}

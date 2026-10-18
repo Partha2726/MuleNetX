@@ -432,7 +432,7 @@ def run_view(db: Session, r: EvaluationRun) -> dict[str, Any]:
     failure = None
     if r.status == "FAILED":
         failure = db.execute(
-            text("SELECT safe_failure_message FROM jobs WHERE job_id = :j"), {"j": r.configuration.get("job_id")}
+            text("SELECT error_summary FROM jobs WHERE job_id = :j"), {"j": r.configuration.get("job_id")}
         ).scalar_one_or_none()
     return {
         "evaluation_run_id": str(r.evaluation_run_id),

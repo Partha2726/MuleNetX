@@ -47,6 +47,14 @@ export type RingTransactionPage = S["RingTransactionPage"];
 export type RingFeatures = S["RingFeaturesOut"];
 export type RingRisk = S["RingRiskOut"];
 export type RingEvidence = S["RingEvidenceOut"];
+export type Scenario = S["ScenarioOut"];
+export type ScenarioPage = S["ScenarioPage"];
+export type ScenarioAccepted = S["ScenarioAccepted"];
+export type InterventionCandidate = S["InterventionCandidateOut"];
+export type InterventionCandidatePage = S["InterventionCandidatePage"];
+export type EvaluationRun = S["EvaluationRunOut"];
+export type EvaluationSummary = S["EvaluationSummaryOut"];
+export type EvaluationMetric = S["EvaluationMetricOut"];
 
 export interface Page<T> {
   items: T[];

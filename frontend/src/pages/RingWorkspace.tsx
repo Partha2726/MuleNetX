@@ -1,4 +1,4 @@
-import { CheckCheck, CircleSlash, RotateCcw } from "lucide-react";
+import { CheckCheck, CircleSlash, FlaskConical, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ApiError } from "../api/client";
@@ -120,7 +120,7 @@ function Overview({ ring }: { ring: Ring }) {
             {(f) => (
               <>
                 {f.paths_truncated && <div className={ui.notice}>Path enumeration reached its analytical bound; path-based features are lower bounds.</div>}
-                <table className={ui.table}>
+                <div className={ui.tableScroll}><table className={ui.table}>
                   <thead>
                     <tr>
                       <th>Feature</th>
@@ -141,7 +141,7 @@ function Overview({ ring }: { ring: Ring }) {
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </table></div>
                 <div className={ui.panelBody}>
                   <span className={`${p.muted} ${p.small}`}>
                     {int(f.qualifying_path_count)} qualifying of {int(f.eligible_path_count)} eligible paths in ring scope · span {int(f.temporal_span_seconds)} s
@@ -164,7 +164,7 @@ function Members({ ring }: { ring: Ring }) {
       <StateView result={result} rows={6}>
         {(data) => (
           <>
-            <table className={ui.table}>
+            <div className={ui.tableScroll}><table className={ui.table}>
               <thead>
                 <tr>
                   <th>Member</th>
@@ -189,7 +189,7 @@ function Members({ ring }: { ring: Ring }) {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
             <Paginator page={data.page} pageSize={data.page_size} total={data.total} capped={data.total_is_capped} onPage={setPage} />
           </>
         )}
@@ -211,7 +211,7 @@ function Transactions({ ring }: { ring: Ring }) {
       <StateView result={result} rows={6} empty="No transaction runs between two members of this ring.">
         {(data) => (
           <>
-            <table className={ui.table}>
+            <div className={ui.tableScroll}><table className={ui.table}>
               <thead>
                 <tr>
                   <th>Time (UTC)</th>
@@ -238,7 +238,7 @@ function Transactions({ ring }: { ring: Ring }) {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
             <div className={ui.panelHead} style={{ borderTop: "1px solid var(--line)", borderBottom: 0 }}>
               <span />
               <div className={p.row}>
@@ -262,7 +262,7 @@ type Item = Record<string, unknown>;
 function EvidenceItems({ section, items }: { section: string; items: Item[] }) {
   if (section === "paths")
     return (
-      <table className={ui.table}>
+      <div className={ui.tableScroll}><table className={ui.table}>
         <thead>
           <tr>
             <th>Path</th>
@@ -288,11 +288,11 @@ function EvidenceItems({ section, items }: { section: string; items: Item[] }) {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     );
   if (section === "relationships")
     return (
-      <table className={ui.table}>
+      <div className={ui.tableScroll}><table className={ui.table}>
         <thead>
           <tr>
             <th>From</th>
@@ -313,7 +313,7 @@ function EvidenceItems({ section, items }: { section: string; items: Item[] }) {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     );
   return (
     <pre className={p.small} style={{ margin: 0, padding: "var(--sp-3) var(--sp-4)", fontFamily: "var(--font-data)", whiteSpace: "pre-wrap", overflowWrap: "anywhere", color: "var(--text-2)" }}>
@@ -414,6 +414,14 @@ export function RingWorkspace() {
                   <span className={ws.bigScore}>{ring.candidate_score.toFixed(3)}</span>
                   <span className={`${p.muted} ${p.small}`}>candidate score</span>
                 </div>
+                {potential && (
+                  <div className={ws.actions}>
+                    <Link to={`/rings/${ring.ring_id}/simulate`} className={ui.button}>
+                      <FlaskConical size={15} aria-hidden />
+                      Simulate disruption
+                    </Link>
+                  </div>
+                )}
                 {canReview && (
                   <div className={ws.actions} role="group" aria-label="Review status">
                     {ring.candidate_status !== "REVIEWED" && (
