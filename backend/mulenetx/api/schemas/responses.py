@@ -652,6 +652,64 @@ class InterventionCandidatePage(PageOf[InterventionCandidateOut]):
     scenario: ScenarioOut
 
 
+class EvaluationAccepted(Out):
+    evaluation_run_id: str
+    status: Literal["QUEUED"]
+
+
+class EvaluationRunOut(Out):
+    evaluation_run_id: str
+    status: Literal["QUEUED", "RUNNING", "COMPLETED", "FAILED"]
+    dataset_id: str
+    model_version: str
+    test_snapshot_id: str
+    scoring_run_id: str
+    analytics_version: str
+    risk_logic_version: str
+    reference_construction_version: str
+    configuration: dict[str, Any]
+    failure: str | None
+    created_at: str | None
+    completed_at: str | None
+    limitation: str
+
+
+class EvaluationMetricOut(Out):
+    level: Literal["TRANSACTION", "ACCOUNT", "RING", "NETWORK"]
+    metric: str
+    value: float | None
+    sample_count: int
+    availability: Literal["AVAILABLE", "UNAVAILABLE"]
+    state: str
+    details: dict[str, Any]
+
+
+class EvaluationProgressionStep(Out):
+    level: str
+    headline_metric: str
+    value: float | None
+    state: str | None
+    sample_count: int | None
+
+
+class EvaluationSummaryOut(EvaluationRunOut):
+    progression: list[EvaluationProgressionStep]
+    levels: dict[str, list[EvaluationMetricOut]]
+    dataset_profile: dict[str, Any] | None
+    state_counts: dict[str, int]
+
+
+class EvaluationLevelOut(Out):
+    evaluation_run_id: str
+    level: Literal["TRANSACTION", "ACCOUNT", "RING", "NETWORK"]
+    metrics: list[EvaluationMetricOut]
+    limitation: str
+
+
+class EvaluationPage(PageOf[EvaluationRunOut]):
+    pass
+
+
 # ── cases, audit ────────────────────────────────────────────────────────────
 
 

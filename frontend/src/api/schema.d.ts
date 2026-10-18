@@ -416,6 +416,98 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/evaluation/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Runs */
+        get: operations["list_runs_api_v1_evaluation_runs_get"];
+        put?: never;
+        /** Start */
+        post: operations["start_api_v1_evaluation_runs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/evaluation/runs/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Summary */
+        get: operations["get_summary_api_v1_evaluation_runs__run_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/evaluation/runs/{run_id}/{level}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Level */
+        get: operations["get_level_api_v1_evaluation_runs__run_id___level__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/evaluation/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Evaluation Summary
+         * @deprecated
+         */
+        get: operations["evaluation_summary_api_v1_evaluation_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/evaluation/{level}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Evaluation Level
+         * @deprecated
+         */
+        get: operations["evaluation_level_api_v1_evaluation__level__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/fraud-ring-candidates": {
         parameters: {
             query?: never;
@@ -1310,6 +1402,176 @@ export interface components {
          */
         ErrorEnvelope: {
             error: components["schemas"]["ErrorBody"];
+        };
+        /** EvaluationAccepted */
+        EvaluationAccepted: {
+            /** Evaluation Run Id */
+            evaluation_run_id: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "QUEUED";
+        };
+        /** EvaluationBody */
+        EvaluationBody: {
+            /** Configuration */
+            configuration?: {
+                [key: string]: unknown;
+            } | null;
+            /** Model Version */
+            model_version?: string | null;
+        };
+        /** EvaluationLevelOut */
+        EvaluationLevelOut: {
+            /** Evaluation Run Id */
+            evaluation_run_id: string;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "TRANSACTION" | "ACCOUNT" | "RING" | "NETWORK";
+            /** Limitation */
+            limitation: string;
+            /** Metrics */
+            metrics: components["schemas"]["EvaluationMetricOut"][];
+        };
+        /** EvaluationMetricOut */
+        EvaluationMetricOut: {
+            /**
+             * Availability
+             * @enum {string}
+             */
+            availability: "AVAILABLE" | "UNAVAILABLE";
+            /** Details */
+            details: {
+                [key: string]: unknown;
+            };
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "TRANSACTION" | "ACCOUNT" | "RING" | "NETWORK";
+            /** Metric */
+            metric: string;
+            /** Sample Count */
+            sample_count: number;
+            /** State */
+            state: string;
+            /** Value */
+            value: number | null;
+        };
+        /** EvaluationPage */
+        EvaluationPage: {
+            /** Items */
+            items: components["schemas"]["EvaluationRunOut"][];
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Total */
+            total: number;
+            /** Total Is Capped */
+            total_is_capped: boolean;
+        };
+        /** EvaluationProgressionStep */
+        EvaluationProgressionStep: {
+            /** Headline Metric */
+            headline_metric: string;
+            /** Level */
+            level: string;
+            /** Sample Count */
+            sample_count: number | null;
+            /** State */
+            state: string | null;
+            /** Value */
+            value: number | null;
+        };
+        /** EvaluationRunOut */
+        EvaluationRunOut: {
+            /** Analytics Version */
+            analytics_version: string;
+            /** Completed At */
+            completed_at: string | null;
+            /** Configuration */
+            configuration: {
+                [key: string]: unknown;
+            };
+            /** Created At */
+            created_at: string | null;
+            /** Dataset Id */
+            dataset_id: string;
+            /** Evaluation Run Id */
+            evaluation_run_id: string;
+            /** Failure */
+            failure: string | null;
+            /** Limitation */
+            limitation: string;
+            /** Model Version */
+            model_version: string;
+            /** Reference Construction Version */
+            reference_construction_version: string;
+            /** Risk Logic Version */
+            risk_logic_version: string;
+            /** Scoring Run Id */
+            scoring_run_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
+            /** Test Snapshot Id */
+            test_snapshot_id: string;
+        };
+        /** EvaluationSummaryOut */
+        EvaluationSummaryOut: {
+            /** Analytics Version */
+            analytics_version: string;
+            /** Completed At */
+            completed_at: string | null;
+            /** Configuration */
+            configuration: {
+                [key: string]: unknown;
+            };
+            /** Created At */
+            created_at: string | null;
+            /** Dataset Id */
+            dataset_id: string;
+            /** Dataset Profile */
+            dataset_profile: {
+                [key: string]: unknown;
+            } | null;
+            /** Evaluation Run Id */
+            evaluation_run_id: string;
+            /** Failure */
+            failure: string | null;
+            /** Levels */
+            levels: {
+                [key: string]: components["schemas"]["EvaluationMetricOut"][];
+            };
+            /** Limitation */
+            limitation: string;
+            /** Model Version */
+            model_version: string;
+            /** Progression */
+            progression: components["schemas"]["EvaluationProgressionStep"][];
+            /** Reference Construction Version */
+            reference_construction_version: string;
+            /** Risk Logic Version */
+            risk_logic_version: string;
+            /** Scoring Run Id */
+            scoring_run_id: string;
+            /** State Counts */
+            state_counts: {
+                [key: string]: number;
+            };
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
+            /** Test Snapshot Id */
+            test_snapshot_id: string;
         };
         /** EvidencePage */
         EvidencePage: {
@@ -3671,6 +3933,194 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    list_runs_api_v1_evaluation_runs_get: {
+        parameters: {
+            query?: {
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvaluationPage"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    start_api_v1_evaluation_runs_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["EvaluationBody"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvaluationAccepted"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    get_summary_api_v1_evaluation_runs__run_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvaluationSummaryOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    get_level_api_v1_evaluation_runs__run_id___level__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+                level: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvaluationLevelOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    evaluation_summary_api_v1_evaluation_summary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvaluationSummaryOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    evaluation_level_api_v1_evaluation__level__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                level: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvaluationLevelOut"];
                 };
             };
             /** @description Error envelope (SRS §19.3) */

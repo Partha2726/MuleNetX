@@ -28,6 +28,7 @@ class Endpoint:
             .replace("{version}", "v0")
             .replace("{type}", "ACCOUNT")
             .replace("{subject_id}", "x")
+            .replace("{level}", "RING")
         )
 
 
@@ -115,4 +116,10 @@ ENDPOINTS: list[Endpoint] = [
     Endpoint("GET", "/api/v1/rings/{id}/interventions", "ring.read"),
     Endpoint("GET", "/api/v1/interventions/{id}", "ring.read"),
     Endpoint("GET", "/api/v1/interventions/{id}/candidates", "ring.read"),
+    Endpoint("POST", "/api/v1/evaluation/runs", "pipeline.control", {}),
+    Endpoint("GET", "/api/v1/evaluation/runs", "evaluation.read"),
+    Endpoint("GET", "/api/v1/evaluation/runs/{id}", "evaluation.read"),
+    Endpoint("GET", "/api/v1/evaluation/runs/{id}/{level}", "evaluation.read"),
+    Endpoint("GET", "/api/v1/evaluation/summary", "evaluation.read"),
+    Endpoint("GET", "/api/v1/evaluation/{level}", "evaluation.read"),
 ]

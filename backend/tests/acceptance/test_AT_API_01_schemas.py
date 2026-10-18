@@ -152,6 +152,14 @@ def test_AT_API_01_every_endpoint(app, client, users) -> None:
     call("GET", "/api/v1/rings/{id}/interventions", f"{r}/interventions", 200)
     call("GET", "/api/v1/interventions/{id}", f"/api/v1/interventions/{sim['scenario_id']}", 200)
     call("GET", "/api/v1/interventions/{id}/candidates", f"/api/v1/interventions/{sim['scenario_id']}/candidates", 200)
+    ev = call("POST", "/api/v1/evaluation/runs", "/api/v1/evaluation/runs", 202, json={}).json()
+    _drain(app, timeout=600)
+    call("GET", "/api/v1/evaluation/runs", "/api/v1/evaluation/runs", 200)
+    call("GET", "/api/v1/evaluation/runs/{id}", f"/api/v1/evaluation/runs/{ev['evaluation_run_id']}", 200)
+    call("GET", "/api/v1/evaluation/runs/{id}/{level}", f"/api/v1/evaluation/runs/{ev['evaluation_run_id']}/RING", 200)
+    summary_alias = call("GET", "/api/v1/evaluation/summary", "/api/v1/evaluation/summary", 200)
+    assert summary_alias.headers["deprecation"] == "true"
+    call("GET", "/api/v1/evaluation/{level}", "/api/v1/evaluation/network", 200)
 
     nb = call(
         "GET", "/api/v1/graph/neighborhood", "/api/v1/graph/neighborhood", 200, params={"account_id": acc, "depth": 2}

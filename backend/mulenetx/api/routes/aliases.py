@@ -12,7 +12,14 @@ from sqlalchemy.orm import Session
 
 from mulenetx.api.deps import Services, get_db, get_services, require
 from mulenetx.api.routes.pipelines import retry_run
-from mulenetx.api.schemas.responses import PathQueryOut, PipelineAccepted, RingOut, RingPage
+from mulenetx.api.schemas.responses import (
+    EvaluationLevelOut,
+    EvaluationSummaryOut,
+    PathQueryOut,
+    PipelineAccepted,
+    RingOut,
+    RingPage,
+)
 from mulenetx.auth.service import Principal
 from mulenetx.core import error_codes as ec
 from mulenetx.core.errors import AppError
@@ -94,3 +101,26 @@ def fraud_ring_candidate(
 
     body = ring_repo.ring_view(db, ring_repo.get_candidate(db, ring_id), active_lineage(db))
     return deprecate(JSONResponse(content=body), f"/api/v1/rings/{ring_id}")
+
+
+@router.get("/evaluation/summary", deprecated=True, response_model=EvaluationSummaryOut)
+def evaluation_summary(
+    _p: Principal = Depends(require("evaluation.read")), db: Session = Depends(get_db)
+) -> JSONResponse:
+    from mulenetx.api.routes.evaluation import latest_completed
+    from mulenetx.evaluation import service as evaluation
+
+    run = latest_completed(db)
+    body = evaluation.summary(db, run)
+    return deprecate(JSONResponse(content=body), f"/api/v1/evaluation/runs/{run.evaluation_run_id}")
+
+
+@router.get("/evaluation/{level}", deprecated=True, response_model=EvaluationLevelOut)
+def evaluation_level(
+    level: str, _p: Principal = Depends(require("evaluation.read")), db: Session = Depends(get_db)
+) -> JSONResponse:
+    from mulenetx.api.routes.evaluation import latest_completed, level_body
+
+    run = latest_completed(db)
+    body = level_body(db, run, level.upper())
+    return deprecate(JSONResponse(content=body), f"/api/v1/evaluation/runs/{run.evaluation_run_id}/{level.upper()}")

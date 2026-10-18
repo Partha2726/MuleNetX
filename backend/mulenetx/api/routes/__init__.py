@@ -12,6 +12,7 @@ from mulenetx.api.routes import (
     cases,
     communities,
     context,
+    evaluation,
     graph,
     health,
     ingestion,
@@ -39,5 +40,6 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(motifs.router)
     app.include_router(rings.router)
     app.include_router(interventions.router)
+    app.include_router(evaluation.router)
     app.include_router(audit.router)
     app.include_router(aliases.router)

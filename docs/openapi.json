@@ -1119,6 +1119,503 @@
         "title": "ErrorEnvelope",
         "type": "object"
       },
+      "EvaluationAccepted": {
+        "additionalProperties": false,
+        "properties": {
+          "evaluation_run_id": {
+            "title": "Evaluation Run Id",
+            "type": "string"
+          },
+          "status": {
+            "const": "QUEUED",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evaluation_run_id",
+          "status"
+        ],
+        "title": "EvaluationAccepted",
+        "type": "object"
+      },
+      "EvaluationBody": {
+        "additionalProperties": false,
+        "properties": {
+          "configuration": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Configuration"
+          },
+          "model_version": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Version"
+          }
+        },
+        "title": "EvaluationBody",
+        "type": "object"
+      },
+      "EvaluationLevelOut": {
+        "additionalProperties": false,
+        "properties": {
+          "evaluation_run_id": {
+            "title": "Evaluation Run Id",
+            "type": "string"
+          },
+          "level": {
+            "enum": [
+              "TRANSACTION",
+              "ACCOUNT",
+              "RING",
+              "NETWORK"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "limitation": {
+            "title": "Limitation",
+            "type": "string"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/EvaluationMetricOut"
+            },
+            "title": "Metrics",
+            "type": "array"
+          }
+        },
+        "required": [
+          "evaluation_run_id",
+          "level",
+          "metrics",
+          "limitation"
+        ],
+        "title": "EvaluationLevelOut",
+        "type": "object"
+      },
+      "EvaluationMetricOut": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "enum": [
+              "AVAILABLE",
+              "UNAVAILABLE"
+            ],
+            "title": "Availability",
+            "type": "string"
+          },
+          "details": {
+            "additionalProperties": true,
+            "title": "Details",
+            "type": "object"
+          },
+          "level": {
+            "enum": [
+              "TRANSACTION",
+              "ACCOUNT",
+              "RING",
+              "NETWORK"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "sample_count": {
+            "title": "Sample Count",
+            "type": "integer"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "level",
+          "metric",
+          "value",
+          "sample_count",
+          "availability",
+          "state",
+          "details"
+        ],
+        "title": "EvaluationMetricOut",
+        "type": "object"
+      },
+      "EvaluationPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EvaluationRunOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_is_capped": {
+            "title": "Total Is Capped",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_is_capped"
+        ],
+        "title": "EvaluationPage",
+        "type": "object"
+      },
+      "EvaluationProgressionStep": {
+        "additionalProperties": false,
+        "properties": {
+          "headline_metric": {
+            "title": "Headline Metric",
+            "type": "string"
+          },
+          "level": {
+            "title": "Level",
+            "type": "string"
+          },
+          "sample_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sample Count"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "level",
+          "headline_metric",
+          "value",
+          "state",
+          "sample_count"
+        ],
+        "title": "EvaluationProgressionStep",
+        "type": "object"
+      },
+      "EvaluationRunOut": {
+        "additionalProperties": false,
+        "properties": {
+          "analytics_version": {
+            "title": "Analytics Version",
+            "type": "string"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "configuration": {
+            "additionalProperties": true,
+            "title": "Configuration",
+            "type": "object"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "dataset_id": {
+            "title": "Dataset Id",
+            "type": "string"
+          },
+          "evaluation_run_id": {
+            "title": "Evaluation Run Id",
+            "type": "string"
+          },
+          "failure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Failure"
+          },
+          "limitation": {
+            "title": "Limitation",
+            "type": "string"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "reference_construction_version": {
+            "title": "Reference Construction Version",
+            "type": "string"
+          },
+          "risk_logic_version": {
+            "title": "Risk Logic Version",
+            "type": "string"
+          },
+          "scoring_run_id": {
+            "title": "Scoring Run Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "QUEUED",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "test_snapshot_id": {
+            "title": "Test Snapshot Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evaluation_run_id",
+          "status",
+          "dataset_id",
+          "model_version",
+          "test_snapshot_id",
+          "scoring_run_id",
+          "analytics_version",
+          "risk_logic_version",
+          "reference_construction_version",
+          "configuration",
+          "failure",
+          "created_at",
+          "completed_at",
+          "limitation"
+        ],
+        "title": "EvaluationRunOut",
+        "type": "object"
+      },
+      "EvaluationSummaryOut": {
+        "additionalProperties": false,
+        "properties": {
+          "analytics_version": {
+            "title": "Analytics Version",
+            "type": "string"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "configuration": {
+            "additionalProperties": true,
+            "title": "Configuration",
+            "type": "object"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "dataset_id": {
+            "title": "Dataset Id",
+            "type": "string"
+          },
+          "dataset_profile": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Profile"
+          },
+          "evaluation_run_id": {
+            "title": "Evaluation Run Id",
+            "type": "string"
+          },
+          "failure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Failure"
+          },
+          "levels": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/EvaluationMetricOut"
+              },
+              "type": "array"
+            },
+            "title": "Levels",
+            "type": "object"
+          },
+          "limitation": {
+            "title": "Limitation",
+            "type": "string"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "progression": {
+            "items": {
+              "$ref": "#/components/schemas/EvaluationProgressionStep"
+            },
+            "title": "Progression",
+            "type": "array"
+          },
+          "reference_construction_version": {
+            "title": "Reference Construction Version",
+            "type": "string"
+          },
+          "risk_logic_version": {
+            "title": "Risk Logic Version",
+            "type": "string"
+          },
+          "scoring_run_id": {
+            "title": "Scoring Run Id",
+            "type": "string"
+          },
+          "state_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "State Counts",
+            "type": "object"
+          },
+          "status": {
+            "enum": [
+              "QUEUED",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "test_snapshot_id": {
+            "title": "Test Snapshot Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evaluation_run_id",
+          "status",
+          "dataset_id",
+          "model_version",
+          "test_snapshot_id",
+          "scoring_run_id",
+          "analytics_version",
+          "risk_logic_version",
+          "reference_construction_version",
+          "configuration",
+          "failure",
+          "created_at",
+          "completed_at",
+          "limitation",
+          "progression",
+          "levels",
+          "dataset_profile",
+          "state_counts"
+        ],
+        "title": "EvaluationSummaryOut",
+        "type": "object"
+      },
       "EvidencePage": {
         "additionalProperties": false,
         "properties": {
@@ -7542,6 +8039,293 @@
           "ingestion"
         ],
         "x-permission": "ingestion.read"
+      }
+    },
+    "/api/v1/evaluation/runs": {
+      "get": {
+        "operationId": "list_runs_api_v1_evaluation_runs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "List Runs",
+        "tags": [
+          "evaluation"
+        ],
+        "x-permission": "evaluation.read"
+      },
+      "post": {
+        "operationId": "start_api_v1_evaluation_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/EvaluationBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationAccepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Start",
+        "tags": [
+          "evaluation"
+        ],
+        "x-permission": "pipeline.control"
+      }
+    },
+    "/api/v1/evaluation/runs/{run_id}": {
+      "get": {
+        "operationId": "get_summary_api_v1_evaluation_runs__run_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationSummaryOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Get Summary",
+        "tags": [
+          "evaluation"
+        ],
+        "x-permission": "evaluation.read"
+      }
+    },
+    "/api/v1/evaluation/runs/{run_id}/{level}": {
+      "get": {
+        "operationId": "get_level_api_v1_evaluation_runs__run_id___level__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "level",
+            "required": true,
+            "schema": {
+              "title": "Level",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationLevelOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Get Level",
+        "tags": [
+          "evaluation"
+        ],
+        "x-permission": "evaluation.read"
+      }
+    },
+    "/api/v1/evaluation/summary": {
+      "get": {
+        "deprecated": true,
+        "operationId": "evaluation_summary_api_v1_evaluation_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationSummaryOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Evaluation Summary",
+        "tags": [
+          "aliases"
+        ],
+        "x-permission": "evaluation.read"
+      }
+    },
+    "/api/v1/evaluation/{level}": {
+      "get": {
+        "deprecated": true,
+        "operationId": "evaluation_level_api_v1_evaluation__level__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "level",
+            "required": true,
+            "schema": {
+              "title": "Level",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationLevelOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Evaluation Level",
+        "tags": [
+          "aliases"
+        ],
+        "x-permission": "evaluation.read"
       }
     },
     "/api/v1/fraud-ring-candidates": {
