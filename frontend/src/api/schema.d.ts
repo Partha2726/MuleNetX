@@ -579,6 +579,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/interventions/{scenario_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Scenario */
+        get: operations["get_scenario_api_v1_interventions__scenario_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/interventions/{scenario_id}/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Scenario Candidates */
+        get: operations["scenario_candidates_api_v1_interventions__scenario_id__candidates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/models": {
         parameters: {
             query?: never;
@@ -764,6 +798,40 @@ export interface paths {
         get: operations["ring_features_api_v1_rings__ring_id__features_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/interventions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ring Interventions */
+        get: operations["ring_interventions_api_v1_rings__ring_id__interventions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/interventions/simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Simulate */
+        post: operations["simulate_api_v1_rings__ring_id__interventions_simulate_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1423,6 +1491,84 @@ export interface components {
             started_at: string;
             /** Status */
             status: string;
+        };
+        /** InterventionCandidateOut */
+        InterventionCandidateOut: {
+            /** Affected Account Ids */
+            affected_account_ids: string[];
+            /** Affected Path Ids */
+            affected_path_ids: string[];
+            /** Alternative Path Ids */
+            alternative_path_ids: string[];
+            /** Baseline Paths Truncated */
+            baseline_paths_truncated: boolean;
+            /** Candidate Id */
+            candidate_id: string;
+            /** Evidence */
+            evidence: {
+                [key: string]: unknown;
+            };
+            /** Flow Disruption */
+            flow_disruption: string;
+            /** Flow Disruption Percentage */
+            flow_disruption_percentage: number;
+            /**
+             * Hypothetical
+             * @constant
+             */
+            hypothetical: true;
+            /** Intervention Cost */
+            intervention_cost: number;
+            /** Intervention Score */
+            intervention_score: number;
+            /** Normalized Connectivity Disruption */
+            normalized_connectivity_disruption: number;
+            /** Normalized Intervention Cost */
+            normalized_intervention_cost: number;
+            /** Normalized Path Disruption */
+            normalized_path_disruption: number;
+            /** Normalized Risk Reduction */
+            normalized_risk_reduction: number;
+            /**
+             * Operation Type
+             * @enum {string}
+             */
+            operation_type: "ACCOUNT_REMOVAL" | "INTERMEDIARY_REMOVAL" | "ACCOUNT_SET_REMOVAL" | "EDGE_REMOVAL";
+            /** Rank Position */
+            rank_position: number;
+            /** Residual Network Risk */
+            residual_network_risk: number;
+            /** Residual Reachable Suspicious Pairs */
+            residual_reachable_suspicious_pairs: number;
+            /** Residual Risk Mass */
+            residual_risk_mass: string;
+            /** Residual Suspicious Flow */
+            residual_suspicious_flow: string;
+            /** Residual Suspicious Paths */
+            residual_suspicious_paths: number;
+            /** Target Ids */
+            target_ids: string[];
+            /** Unavailable Metrics */
+            unavailable_metrics: string[];
+        };
+        /** InterventionCandidatePage */
+        InterventionCandidatePage: {
+            /**
+             * Hypothetical
+             * @constant
+             */
+            hypothetical: true;
+            /** Items */
+            items: components["schemas"]["InterventionCandidateOut"][];
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            scenario: components["schemas"]["ScenarioOut"];
+            /** Total */
+            total: number;
+            /** Total Is Capped */
+            total_is_capped: boolean;
         };
         /** LineageOut */
         LineageOut: {
@@ -2277,6 +2423,101 @@ export interface components {
             /** Next Cursor */
             next_cursor: string | null;
         };
+        /** ScenarioAccepted */
+        ScenarioAccepted: {
+            /**
+             * Hypothetical
+             * @constant
+             */
+            hypothetical: true;
+            /** Scenario Id */
+            scenario_id: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "QUEUED";
+        };
+        /** ScenarioOut */
+        ScenarioOut: {
+            /** Analytics Version */
+            analytics_version: string;
+            /** Baseline */
+            baseline: {
+                [key: string]: unknown;
+            };
+            /** Baseline Graph Snapshot Id */
+            baseline_graph_snapshot_id: string;
+            /** Baseline Paths Truncated */
+            baseline_paths_truncated: boolean | null;
+            /** Completed At */
+            completed_at: string | null;
+            /** Created At */
+            created_at: string | null;
+            /** Eligible Candidate Count */
+            eligible_candidate_count: number | null;
+            /** Error Summary */
+            error_summary: string | null;
+            /**
+             * Hypothetical
+             * @constant
+             */
+            hypothetical: true;
+            /** Intervention Type */
+            intervention_type: string | null;
+            /** Job Id */
+            job_id: string | null;
+            /** Metrics Are Lower Bounds */
+            metrics_are_lower_bounds: boolean;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "RANK" | "EVALUATE";
+            /** Ranking Configuration */
+            ranking_configuration: {
+                [key: string]: unknown;
+            };
+            /** Ranking Configuration Hash */
+            ranking_configuration_hash: string;
+            /** Requested By */
+            requested_by: string;
+            /** Risk Logic Version */
+            risk_logic_version: string;
+            /** Scenario Id */
+            scenario_id: string;
+            /** Scoring Run Id */
+            scoring_run_id: string;
+            /** Statement */
+            statement: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
+            /** Target Ids */
+            target_ids: string[] | null;
+            /** Target Ring Id */
+            target_ring_id: string;
+        };
+        /** ScenarioPage */
+        ScenarioPage: {
+            /**
+             * Hypothetical
+             * @constant
+             */
+            hypothetical: true;
+            /** Items */
+            items: components["schemas"]["ScenarioOut"][];
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Total */
+            total: number;
+            /** Total Is Capped */
+            total_is_capped: boolean;
+        };
         /** ShapContribution */
         ShapContribution: {
             /** Direction */
@@ -2330,6 +2571,18 @@ export interface components {
             statement: string;
             /** Top N */
             top_n: number;
+        };
+        /** SimulateBody */
+        SimulateBody: {
+            /** Intervention Type */
+            intervention_type?: ("ACCOUNT_REMOVAL" | "INTERMEDIARY_REMOVAL" | "ACCOUNT_SET_REMOVAL" | "EDGE_REMOVAL") | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "RANK" | "EVALUATE";
+            /** Target Ids */
+            target_ids?: string[] | null;
         };
         /** StartPipeline */
         StartPipeline: {
@@ -3767,6 +4020,71 @@ export interface operations {
             };
         };
     };
+    get_scenario_api_v1_interventions__scenario_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    scenario_candidates_api_v1_interventions__scenario_id__candidates_get: {
+        parameters: {
+            query?: {
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InterventionCandidatePage"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     list_models_api_v1_models_get: {
         parameters: {
             query?: {
@@ -4149,6 +4467,75 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RingFeaturesOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    ring_interventions_api_v1_rings__ring_id__interventions_get: {
+        parameters: {
+            query?: {
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioPage"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    simulate_api_v1_rings__ring_id__interventions_simulate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimulateBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioAccepted"];
                 };
             };
             /** @description Error envelope (SRS §19.3) */

@@ -11,10 +11,6 @@ import pytest
 from tests.openapiutil import SRS, document, norm, operations, srs_aliases, srs_rows
 
 NOT_YET: set[tuple[str, str]] = {
-    ("POST", "/api/v1/rings/{id}/interventions/simulate"),  # T37
-    ("GET", "/api/v1/rings/{id}/interventions"),
-    ("GET", "/api/v1/interventions/{id}"),
-    ("GET", "/api/v1/interventions/{id}/candidates"),
     ("POST", "/api/v1/evaluation/runs"),  # T38
     ("GET", "/api/v1/evaluation/runs"),
     ("GET", "/api/v1/evaluation/runs/{id}"),

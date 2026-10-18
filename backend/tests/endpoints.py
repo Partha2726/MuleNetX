@@ -111,4 +111,8 @@ ENDPOINTS: list[Endpoint] = [
     Endpoint("GET", "/api/v1/rings/{id}/evidence", "ring.read"),
     Endpoint("GET", "/api/v1/fraud-ring-candidates", "ring.read"),
     Endpoint("GET", "/api/v1/fraud-ring-candidates/{id}", "ring.read"),
+    Endpoint("POST", "/api/v1/rings/{id}/interventions/simulate", "intervention.simulate", {"mode": "RANK"}),
+    Endpoint("GET", "/api/v1/rings/{id}/interventions", "ring.read"),
+    Endpoint("GET", "/api/v1/interventions/{id}", "ring.read"),
+    Endpoint("GET", "/api/v1/interventions/{id}/candidates", "ring.read"),
 ]

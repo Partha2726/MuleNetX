@@ -1723,6 +1723,205 @@
         "title": "IngestionRunOut",
         "type": "object"
       },
+      "InterventionCandidateOut": {
+        "additionalProperties": false,
+        "properties": {
+          "affected_account_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Affected Account Ids",
+            "type": "array"
+          },
+          "affected_path_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Affected Path Ids",
+            "type": "array"
+          },
+          "alternative_path_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Alternative Path Ids",
+            "type": "array"
+          },
+          "baseline_paths_truncated": {
+            "title": "Baseline Paths Truncated",
+            "type": "boolean"
+          },
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "evidence": {
+            "additionalProperties": true,
+            "title": "Evidence",
+            "type": "object"
+          },
+          "flow_disruption": {
+            "title": "Flow Disruption",
+            "type": "string"
+          },
+          "flow_disruption_percentage": {
+            "title": "Flow Disruption Percentage",
+            "type": "number"
+          },
+          "hypothetical": {
+            "const": true,
+            "title": "Hypothetical",
+            "type": "boolean"
+          },
+          "intervention_cost": {
+            "title": "Intervention Cost",
+            "type": "number"
+          },
+          "intervention_score": {
+            "title": "Intervention Score",
+            "type": "number"
+          },
+          "normalized_connectivity_disruption": {
+            "title": "Normalized Connectivity Disruption",
+            "type": "number"
+          },
+          "normalized_intervention_cost": {
+            "title": "Normalized Intervention Cost",
+            "type": "number"
+          },
+          "normalized_path_disruption": {
+            "title": "Normalized Path Disruption",
+            "type": "number"
+          },
+          "normalized_risk_reduction": {
+            "title": "Normalized Risk Reduction",
+            "type": "number"
+          },
+          "operation_type": {
+            "enum": [
+              "ACCOUNT_REMOVAL",
+              "INTERMEDIARY_REMOVAL",
+              "ACCOUNT_SET_REMOVAL",
+              "EDGE_REMOVAL"
+            ],
+            "title": "Operation Type",
+            "type": "string"
+          },
+          "rank_position": {
+            "title": "Rank Position",
+            "type": "integer"
+          },
+          "residual_network_risk": {
+            "title": "Residual Network Risk",
+            "type": "number"
+          },
+          "residual_reachable_suspicious_pairs": {
+            "title": "Residual Reachable Suspicious Pairs",
+            "type": "integer"
+          },
+          "residual_risk_mass": {
+            "title": "Residual Risk Mass",
+            "type": "string"
+          },
+          "residual_suspicious_flow": {
+            "title": "Residual Suspicious Flow",
+            "type": "string"
+          },
+          "residual_suspicious_paths": {
+            "title": "Residual Suspicious Paths",
+            "type": "integer"
+          },
+          "target_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Target Ids",
+            "type": "array"
+          },
+          "unavailable_metrics": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unavailable Metrics",
+            "type": "array"
+          }
+        },
+        "required": [
+          "candidate_id",
+          "hypothetical",
+          "baseline_paths_truncated",
+          "rank_position",
+          "operation_type",
+          "target_ids",
+          "intervention_score",
+          "residual_suspicious_flow",
+          "flow_disruption",
+          "flow_disruption_percentage",
+          "residual_suspicious_paths",
+          "normalized_path_disruption",
+          "residual_reachable_suspicious_pairs",
+          "normalized_connectivity_disruption",
+          "residual_risk_mass",
+          "residual_network_risk",
+          "normalized_risk_reduction",
+          "intervention_cost",
+          "normalized_intervention_cost",
+          "affected_account_ids",
+          "affected_path_ids",
+          "alternative_path_ids",
+          "unavailable_metrics",
+          "evidence"
+        ],
+        "title": "InterventionCandidateOut",
+        "type": "object"
+      },
+      "InterventionCandidatePage": {
+        "additionalProperties": false,
+        "properties": {
+          "hypothetical": {
+            "const": true,
+            "title": "Hypothetical",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/InterventionCandidateOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "scenario": {
+            "$ref": "#/components/schemas/ScenarioOut"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_is_capped": {
+            "title": "Total Is Capped",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_is_capped",
+          "hypothetical",
+          "scenario"
+        ],
+        "title": "InterventionCandidatePage",
+        "type": "object"
+      },
       "LineageOut": {
         "additionalProperties": false,
         "properties": {
@@ -4331,6 +4530,271 @@
         "title": "RingTransactionPage",
         "type": "object"
       },
+      "ScenarioAccepted": {
+        "additionalProperties": false,
+        "properties": {
+          "hypothetical": {
+            "const": true,
+            "title": "Hypothetical",
+            "type": "boolean"
+          },
+          "scenario_id": {
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "status": {
+            "const": "QUEUED",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "status",
+          "hypothetical"
+        ],
+        "title": "ScenarioAccepted",
+        "type": "object"
+      },
+      "ScenarioOut": {
+        "additionalProperties": false,
+        "properties": {
+          "analytics_version": {
+            "title": "Analytics Version",
+            "type": "string"
+          },
+          "baseline": {
+            "additionalProperties": true,
+            "title": "Baseline",
+            "type": "object"
+          },
+          "baseline_graph_snapshot_id": {
+            "title": "Baseline Graph Snapshot Id",
+            "type": "string"
+          },
+          "baseline_paths_truncated": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Baseline Paths Truncated"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "eligible_candidate_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eligible Candidate Count"
+          },
+          "error_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Summary"
+          },
+          "hypothetical": {
+            "const": true,
+            "title": "Hypothetical",
+            "type": "boolean"
+          },
+          "intervention_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intervention Type"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "metrics_are_lower_bounds": {
+            "title": "Metrics Are Lower Bounds",
+            "type": "boolean"
+          },
+          "mode": {
+            "enum": [
+              "RANK",
+              "EVALUATE"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "ranking_configuration": {
+            "additionalProperties": true,
+            "title": "Ranking Configuration",
+            "type": "object"
+          },
+          "ranking_configuration_hash": {
+            "title": "Ranking Configuration Hash",
+            "type": "string"
+          },
+          "requested_by": {
+            "title": "Requested By",
+            "type": "string"
+          },
+          "risk_logic_version": {
+            "title": "Risk Logic Version",
+            "type": "string"
+          },
+          "scenario_id": {
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "scoring_run_id": {
+            "title": "Scoring Run Id",
+            "type": "string"
+          },
+          "statement": {
+            "title": "Statement",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "QUEUED",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Ids"
+          },
+          "target_ring_id": {
+            "title": "Target Ring Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "hypothetical",
+          "statement",
+          "mode",
+          "status",
+          "target_ring_id",
+          "baseline_graph_snapshot_id",
+          "scoring_run_id",
+          "intervention_type",
+          "target_ids",
+          "baseline",
+          "baseline_paths_truncated",
+          "metrics_are_lower_bounds",
+          "eligible_candidate_count",
+          "ranking_configuration",
+          "ranking_configuration_hash",
+          "analytics_version",
+          "risk_logic_version",
+          "requested_by",
+          "job_id",
+          "error_summary",
+          "created_at",
+          "completed_at"
+        ],
+        "title": "ScenarioOut",
+        "type": "object"
+      },
+      "ScenarioPage": {
+        "additionalProperties": false,
+        "properties": {
+          "hypothetical": {
+            "const": true,
+            "title": "Hypothetical",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_is_capped": {
+            "title": "Total Is Capped",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_is_capped",
+          "hypothetical"
+        ],
+        "title": "ScenarioPage",
+        "type": "object"
+      },
       "ShapContribution": {
         "additionalProperties": false,
         "properties": {
@@ -4479,6 +4943,56 @@
           "feature_count"
         ],
         "title": "ShapOut",
+        "type": "object"
+      },
+      "SimulateBody": {
+        "additionalProperties": false,
+        "properties": {
+          "intervention_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "ACCOUNT_REMOVAL",
+                  "INTERMEDIARY_REMOVAL",
+                  "ACCOUNT_SET_REMOVAL",
+                  "EDGE_REMOVAL"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intervention Type"
+          },
+          "mode": {
+            "enum": [
+              "RANK",
+              "EVALUATE"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "target_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Ids"
+          }
+        },
+        "required": [
+          "mode"
+        ],
+        "title": "SimulateBody",
         "type": "object"
       },
       "StartPipeline": {
@@ -7781,6 +8295,126 @@
         "x-permission": "pipeline.control"
       }
     },
+    "/api/v1/interventions/{scenario_id}": {
+      "get": {
+        "operationId": "get_scenario_api_v1_interventions__scenario_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Get Scenario",
+        "tags": [
+          "interventions"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/interventions/{scenario_id}/candidates": {
+      "get": {
+        "operationId": "scenario_candidates_api_v1_interventions__scenario_id__candidates_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterventionCandidatePage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Scenario Candidates",
+        "tags": [
+          "interventions"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
     "/api/v1/models": {
       "get": {
         "operationId": "list_models_api_v1_models_get",
@@ -8602,6 +9236,136 @@
           "rings"
         ],
         "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/rings/{ring_id}/interventions": {
+      "get": {
+        "operationId": "ring_interventions_api_v1_rings__ring_id__interventions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Ring Interventions",
+        "tags": [
+          "interventions"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/rings/{ring_id}/interventions/simulate": {
+      "post": {
+        "operationId": "simulate_api_v1_rings__ring_id__interventions_simulate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioAccepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Simulate",
+        "tags": [
+          "interventions"
+        ],
+        "x-permission": "intervention.simulate"
       }
     },
     "/api/v1/rings/{ring_id}/motifs": {

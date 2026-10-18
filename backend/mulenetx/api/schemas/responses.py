@@ -584,6 +584,74 @@ class RingEvidenceOut(Lineaged):
     versions: dict[str, Any]
 
 
+class ScenarioAccepted(Out):
+    scenario_id: str
+    status: Literal["QUEUED"]
+    hypothetical: Literal[True]
+
+
+class ScenarioOut(Out):
+    scenario_id: str
+    hypothetical: Literal[True]
+    statement: str
+    mode: Literal["RANK", "EVALUATE"]
+    status: Literal["QUEUED", "RUNNING", "COMPLETED", "FAILED"]
+    target_ring_id: str
+    baseline_graph_snapshot_id: str
+    scoring_run_id: str
+    intervention_type: str | None
+    target_ids: list[str] | None
+    baseline: dict[str, Any]
+    baseline_paths_truncated: bool | None
+    metrics_are_lower_bounds: bool
+    eligible_candidate_count: int | None
+    ranking_configuration: dict[str, Any]
+    ranking_configuration_hash: str
+    analytics_version: str
+    risk_logic_version: str
+    requested_by: str
+    job_id: str | None
+    error_summary: str | None
+    created_at: str | None
+    completed_at: str | None
+
+
+class ScenarioPage(PageOf[ScenarioOut]):
+    hypothetical: Literal[True]
+
+
+class InterventionCandidateOut(Out):
+    candidate_id: str
+    hypothetical: Literal[True]
+    baseline_paths_truncated: bool
+    rank_position: int
+    operation_type: Literal["ACCOUNT_REMOVAL", "INTERMEDIARY_REMOVAL", "ACCOUNT_SET_REMOVAL", "EDGE_REMOVAL"]
+    target_ids: list[str]
+    intervention_score: float
+    residual_suspicious_flow: str
+    flow_disruption: str
+    flow_disruption_percentage: float
+    residual_suspicious_paths: int
+    normalized_path_disruption: float
+    residual_reachable_suspicious_pairs: int
+    normalized_connectivity_disruption: float
+    residual_risk_mass: str
+    residual_network_risk: float
+    normalized_risk_reduction: float
+    intervention_cost: float
+    normalized_intervention_cost: float
+    affected_account_ids: list[str]
+    affected_path_ids: list[str]
+    alternative_path_ids: list[str]
+    unavailable_metrics: list[str]
+    evidence: dict[str, Any]
+
+
+class InterventionCandidatePage(PageOf[InterventionCandidateOut]):
+    hypothetical: Literal[True]
+    scenario: ScenarioOut
+
+
 # ── cases, audit ────────────────────────────────────────────────────────────
 
 

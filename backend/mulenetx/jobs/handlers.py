@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from mulenetx.jobs.intervention_handler import InterventionHandler
 from mulenetx.jobs.pipeline_handler import PipelineStageHandler
 from mulenetx.jobs.retire_handler import SnapshotRetireHandler
 from mulenetx.jobs.runner import Handler
@@ -14,4 +15,5 @@ def build_handlers() -> dict[str, Handler]:
         "PIPELINE_STAGE": pipeline,
         "TRAIN": pipeline,
         "SNAPSHOT_RETIRE": SnapshotRetireHandler(),
+        "INTERVENTION": InterventionHandler(),
     }

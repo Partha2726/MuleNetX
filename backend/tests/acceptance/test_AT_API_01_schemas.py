@@ -143,6 +143,15 @@ def test_AT_API_01_every_endpoint(app, client, users) -> None:
     assert ring_alias.headers["deprecation"] == "true"
     call("GET", "/api/v1/fraud-ring-candidates/{id}", f"/api/v1/fraud-ring-candidates/{pot}", 200)
     call("PATCH", "/api/v1/rings/{id}/status", f"{r}/status", 200, json={"status": "REVIEWED"})
+    sim = call(
+        "POST", "/api/v1/rings/{id}/interventions/simulate", f"{r}/interventions/simulate", 202, json={"mode": "RANK"}
+    ).json()
+    from tests.ingestutil import run_worker as _drain
+
+    _drain(app, timeout=600)
+    call("GET", "/api/v1/rings/{id}/interventions", f"{r}/interventions", 200)
+    call("GET", "/api/v1/interventions/{id}", f"/api/v1/interventions/{sim['scenario_id']}", 200)
+    call("GET", "/api/v1/interventions/{id}/candidates", f"/api/v1/interventions/{sim['scenario_id']}/candidates", 200)
 
     nb = call(
         "GET", "/api/v1/graph/neighborhood", "/api/v1/graph/neighborhood", 200, params={"account_id": acc, "depth": 2}

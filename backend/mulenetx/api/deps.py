@@ -18,6 +18,7 @@ from mulenetx.core.errors import AppError
 from mulenetx.core.logging import user_id_var
 from mulenetx.core.runtime import Runtime
 from mulenetx.ingestion.service import IngestionService
+from mulenetx.interventions.service import InterventionService
 from mulenetx.investigation.service import InvestigationService
 from mulenetx.jobs.service import JobService
 
@@ -61,6 +62,13 @@ class Services:
     @property
     def investigation(self) -> InvestigationService:
         result: InvestigationService = self._get("investigation", lambda: InvestigationService(self.audit))
+        return result
+
+    @property
+    def interventions(self) -> InterventionService:
+        result: InterventionService = self._get(
+            "interventions", lambda: InterventionService(self.runtime.settings, self.audit)
+        )
         return result
 
 
