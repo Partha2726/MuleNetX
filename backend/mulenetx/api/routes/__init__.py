@@ -4,7 +4,19 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
-from mulenetx.api.routes import accounts, aliases, auth, context, graph, health, ingestion, models, pipelines, users
+from mulenetx.api.routes import (
+    accounts,
+    aliases,
+    auth,
+    communities,
+    context,
+    graph,
+    health,
+    ingestion,
+    models,
+    pipelines,
+    users,
+)
 
 
 def register_routes(app: FastAPI) -> None:
@@ -17,4 +29,5 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(context.router)
     app.include_router(accounts.router)
     app.include_router(graph.router)
+    app.include_router(communities.router)
     app.include_router(aliases.router)

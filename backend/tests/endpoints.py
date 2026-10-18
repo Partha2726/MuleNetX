@@ -53,5 +53,10 @@ ENDPOINTS: list[Endpoint] = [
     Endpoint("GET", "/api/v1/accounts/{id}/risk/propagation", "risk.read"),
     Endpoint("GET", "/api/v1/accounts/{id}/features", "risk.read"),
     Endpoint("GET", "/api/v1/accounts/{id}/temporal", "temporal.read"),
+    Endpoint("GET", "/api/v1/accounts/{id}/shap", "shap.read"),
     Endpoint("GET", "/api/v1/graph/neighborhood", "graph.read", params={"account_id": "x:CA"}),
+    Endpoint("GET", "/api/v1/graph/metrics", "graph.analytics.read", params={"account_id": "x:CA"}),
+    Endpoint("GET", "/api/v1/communities", "community.read"),
+    Endpoint("GET", "/api/v1/communities/{id}", "community.read"),
+    Endpoint("GET", "/api/v1/accounts/{id}/community", "community.read"),
 ]
