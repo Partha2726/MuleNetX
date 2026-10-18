@@ -49,9 +49,10 @@ class AnalyticProjection:
 
     def __init__(self, graph_snapshot_id: uuid.UUID, hops: dict[tuple[str, str], list[Tx]]) -> None:
         self.graph_snapshot_id = graph_snapshot_id
-        self.hops = {
-            k: sorted(v, key=lambda t: (t.timestamp, t.transaction_id)) for k, v in hops.items() if k[0] != k[1]
-        }
+        ordered = {k: sorted(v, key=lambda t: (t.timestamp, t.transaction_id)) for k, v in hops.items()}
+        self.hops = {k: v for k, v in ordered.items() if k[0] != k[1]}
+        # self-transfers take no part in paths but are still transactions between members (§9.3)
+        self.loops = {k[0]: v for k, v in ordered.items() if k[0] == k[1]}
         out: dict[str, list[str]] = {}
         inn: dict[str, list[str]] = {}
         for src, dst in self.hops:
@@ -77,7 +78,7 @@ def load_projection(
                 """
                 SELECT source_account_id AS src, destination_account_id AS dst, transaction_id, "timestamp", amount
                 FROM transactions
-                WHERE dataset_id = :d AND "timestamp" <= :c AND source_account_id <> destination_account_id
+                WHERE dataset_id = :d AND "timestamp" <= :c
                 ORDER BY source_account_id, destination_account_id, "timestamp", transaction_id
                 """
             ),
@@ -224,3 +225,37 @@ def enumerate_ring_scope(
             "eligible_expansions": eligible_counter.expansions,
         },
     )
+
+
+def qualifying_paths_from(
+    proj: AnalyticProjection, sources: Iterable[str], run: ScoringContext, budget: Budget
+) -> tuple[list[Path], bool]:
+    """Qualifying paths (§3.5) whose source is one of `sources`, by forward DFS in the §16.2 order."""
+    starts = sorted(a for a in set(sources) if is_suspicious_account(a, run))
+    counter = _Counter(budget)
+    found: dict[Path, None] = {}
+    for start in starts:
+        stack: list[tuple[str, int]] = [(start, 0)]
+        seq = [start]
+        on_path = {start}
+        while stack:
+            node, i = stack[-1]
+            nbrs = proj.out.get(node, [])
+            if i >= len(nbrs) or len(seq) > budget.max_depth:
+                stack.pop()
+                on_path.discard(seq.pop())
+                continue
+            stack[-1] = (node, i + 1)
+            nxt = nbrs[i]
+            if nxt in on_path:
+                continue
+            if not counter.expand():
+                return list(found), True
+            seq.append(nxt)
+            on_path.add(nxt)
+            stack.append((nxt, 0))
+            if is_suspicious_account(nxt, run):
+                if not counter.take_path():
+                    return list(found), True
+                found[tuple(seq)] = None
+    return list(found), counter.truncated
