@@ -15,7 +15,8 @@ export const pipelineService = {
   context: (signal?: AbortSignal) => api.get<Context>("/context", undefined, signal),
   upload: (f: UploadFields) => {
     const form = new FormData();
-    form.set("file", f.file);
+    // browsers label .csv inconsistently (e.g. application/vnd.ms-excel); the server accepts text/csv only
+    form.set("file", f.file.type === "text/csv" ? f.file : new File([f.file], f.file.name, { type: "text/csv" }));
     form.set("name", f.name);
     form.set("dataset_version", f.dataset_version);
     form.set("source", f.source);

@@ -26,6 +26,16 @@ SCHEMA_STATEMENTS = (
 )
 
 GRAPH_ERRORS: tuple[type[Exception], ...] = (ServiceUnavailable, DriverError, OSError)
+# also caught, then narrowed by is_unreachable(): the driver's name-resolution failure is a ValueError
+CONNECT_ERRORS: tuple[type[Exception], ...] = (*GRAPH_ERRORS, ValueError)
+
+
+def is_unreachable(exc: BaseException) -> bool:
+    """Connection failures, including the driver's ValueError when the host name does not resolve (a stopped
+    Compose service has no DNS entry). Any other ValueError is a programming error and must propagate."""
+    if isinstance(exc, GRAPH_ERRORS):
+        return True
+    return isinstance(exc, ValueError) and "resolve address" in str(exc)
 
 
 class Neo4jClient:
@@ -57,6 +67,10 @@ class Neo4jClient:
             self.driver.verify_connectivity()
         except (ServiceUnavailable, DriverError, OSError, Neo4jError):
             return False
+        except ValueError as exc:
+            if is_unreachable(exc):
+                return False
+            raise
         return True
 
     @contextmanager
@@ -64,7 +78,9 @@ class Neo4jClient:
         try:
             with self.driver.session() as s:
                 yield s
-        except GRAPH_ERRORS as exc:
+        except CONNECT_ERRORS as exc:
+            if not is_unreachable(exc):
+                raise
             logger.warning("neo4j unavailable: %s", type(exc).__name__)
             raise AppError(ec.GRAPH_UNAVAILABLE) from exc
 
@@ -76,7 +92,9 @@ class Neo4jClient:
             with self.driver.session() as s:
                 result = s.run(Query(query, timeout=timeout), parameters or {})
                 return [record.data() for record in result]
-        except GRAPH_ERRORS as exc:
+        except CONNECT_ERRORS as exc:
+            if not is_unreachable(exc):
+                raise
             logger.warning("neo4j unavailable: %s", type(exc).__name__)
             raise AppError(ec.GRAPH_UNAVAILABLE) from exc
 
