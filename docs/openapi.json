@@ -993,6 +993,10 @@
             "title": "Is Active",
             "type": "boolean"
           },
+          "is_synthetic_injection": {
+            "title": "Is Synthetic Injection",
+            "type": "boolean"
+          },
           "model_version": {
             "anyOf": [
               {
@@ -1058,7 +1062,8 @@
           "risk_logic_version",
           "updated_at",
           "updated_by_pipeline_run_id",
-          "is_active"
+          "is_active",
+          "is_synthetic_injection"
         ],
         "title": "ContextOut",
         "type": "object"

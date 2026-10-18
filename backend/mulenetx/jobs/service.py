@@ -270,6 +270,7 @@ class JobService:
     @staticmethod
     def active_context(db: Session) -> dict[str, Any]:
         ctx = db.execute(select(ActiveContext)).scalar_one()
+        dataset = None if ctx.dataset_id is None else db.get(Dataset, ctx.dataset_id)
         return {
             "dataset_id": _str(ctx.dataset_id),
             "graph_snapshot_id": _str(ctx.graph_snapshot_id),
@@ -280,4 +281,6 @@ class JobService:
             "updated_at": _iso(ctx.updated_at),
             "updated_by_pipeline_run_id": _str(ctx.updated_by_pipeline_run_id),
             "is_active": ctx.dataset_id is not None,
+            # §7.10 rule 3: the UI labels a synthetic-injection context SYNTHETIC DATA
+            "is_synthetic_injection": bool(dataset is not None and dataset.is_synthetic_injection),
         }

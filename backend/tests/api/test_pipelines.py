@@ -61,6 +61,7 @@ def test_pipeline_walks_every_state_to_ready(app, client, users) -> None:
 
     ctx = client.get("/api/v1/context", headers=admin.headers).json()
     assert ctx["dataset_id"] == str(ds.dataset_id) and ctx["updated_by_pipeline_run_id"] == run_id
+    assert ctx["is_synthetic_injection"] is False  # §7.10: injection is disabled by default
     assert any(e.action == "pipeline.activate" for e in audit_events(app))
     assert any(e.action == "pipeline.start" for e in audit_events(app))
 

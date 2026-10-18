@@ -168,6 +168,7 @@ class ContextOut(Out):
     updated_at: str | None
     updated_by_pipeline_run_id: str | None
     is_active: bool
+    is_synthetic_injection: bool
 
 
 # ── accounts, transactions, risk ───────────────────────────────────────────
