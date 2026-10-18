@@ -8,6 +8,7 @@ npm run dev        # http://localhost:5173, proxies /api to MULENETX_BACKEND (de
 npm run lint       # eslint + tsc
 npm test           # Vitest + MSW
 npm run build
+npm run e2e        # Playwright golden path (AT-E2E-01) against a running stack; see e2e/playwright.config.ts
 make gen-types     # (repo root) regenerate src/api/schema.d.ts from docs/openapi.json
 ```
 
