@@ -48,3 +48,9 @@ def test_AT_DATA_05_large_upload_accepted_quickly(app, client, users, tmp_path: 
         ).one()
     assert (job.kind, job.status) == ("INGEST", "QUEUED")  # parsing happens in the worker, not the request
     big.unlink()
+    with rt.engine.connect() as conn:
+        staged = conn.execute(
+            text("SELECT payload->>'staged_path' FROM jobs WHERE payload->>'ingestion_run_id' = :i"),
+            {"i": resp.json()["ingestion_run_id"]},
+        ).scalar_one()
+    Path(staged).unlink(missing_ok=True)

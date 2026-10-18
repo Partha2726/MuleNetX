@@ -132,6 +132,8 @@ class Settings(BaseSettings):
     max_page_size: int = 100
     pagination_count_cap: int = 10_000
     max_transaction_range_days: int = 31
+    shap_max_top_n: int = 50
+    shap_default_top_n: int = 10
 
     # ── Copilot (§21) ──────────────────────────────────────────────────────
     copilot_timeout_seconds: float = 20.0

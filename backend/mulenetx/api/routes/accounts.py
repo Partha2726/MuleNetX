@@ -153,3 +153,24 @@ def account_temporal(
 ) -> dict[str, Any]:
     account_repo.require(db, account_id)
     return risk_repo.temporal(db, account_id, scoring_run_id)
+
+
+@router.get("/{account_id}/shap")
+def account_shap(
+    account_id: str,
+    assessment_id: uuid.UUID | None = Query(default=None),
+    top_n: int | None = Query(default=None),
+    _p: Principal = Depends(require("shap.read")),
+    db: Session = Depends(get_db),
+    services: Services = Depends(get_services),
+) -> dict[str, Any]:
+    from mulenetx.explain.shap_service import explain
+
+    s = services.runtime.settings
+    n = s.shap_default_top_n if top_n is None else top_n
+    if n < 1:
+        raise AppError(ec.VALIDATION_ERROR, details={"field": "top_n"})
+    if n > s.shap_max_top_n:
+        raise limit_exceeded("top_n", s.shap_max_top_n)
+    account_repo.require(db, account_id)
+    return explain(db, account_id, assessment_id, n)

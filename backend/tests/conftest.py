@@ -91,3 +91,13 @@ def users(app: Any) -> Any:
     from tests.apiutil import UserFactory
 
     return UserFactory(app)
+
+
+@pytest.fixture(autouse=True, scope="session")
+def _clean_test_staging() -> Any:
+    """Staged uploads of queued INGEST jobs are never consumed in tests; remove them before and after."""
+    import shutil
+
+    shutil.rmtree(BASE_ENV["staging_dir"], ignore_errors=True)
+    yield
+    shutil.rmtree(BASE_ENV["staging_dir"], ignore_errors=True)

@@ -173,18 +173,18 @@ class RiskService:
                     result = compose(ac, prop, weights, risk_logic.tier_thresholds)
                     availability = {
                         "ml": {
-                            "state": "AVAILABLE" if comps.ml_score is not None else "UNAVAILABLE",
+                            "state": "AVAILABLE" if ac.ml_score is not None else "UNAVAILABLE",
                             "reason": ml.reason,
                         },
                         "graph": {
-                            "state": "AVAILABLE" if comps.graph_available else "UNAVAILABLE",
+                            "state": "AVAILABLE" if ac.graph_available else "UNAVAILABLE",
                             "inputs": _inputs(data["graph"].inputs),
                         },
                         "behavioral": {
-                            "state": "AVAILABLE" if comps.behavioral_available else "UNAVAILABLE",
+                            "state": "AVAILABLE" if ac.behavioral_available else "UNAVAILABLE",
                             "inputs": _inputs(data["behavioral"].inputs),
                         },
-                        "rules": {"state": "AVAILABLE" if comps.rules_available else "UNAVAILABLE"},
+                        "rules": {"state": "AVAILABLE" if ac.rules_available else "UNAVAILABLE"},
                         "propagation": {"state": "AVAILABLE"},
                         "signal_coverage": format(result.signal_coverage, "f"),
                         "max_attainable_score": format(result.max_attainable_score, "f"),
@@ -201,10 +201,10 @@ class RiskService:
                             reg.feature_version,
                             analytics_version,
                             risk_logic.risk_logic_version,
-                            comps.ml_score,
-                            comps.graph,
-                            comps.behavioral,
-                            comps.rules,
+                            ac.ml_score,
+                            ac.graph,
+                            ac.behavioral,
+                            ac.rules,
                             result.pre_propagation_score,
                             result.propagated_risk,
                             result.final_score,
