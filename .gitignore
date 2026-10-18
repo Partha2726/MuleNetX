@@ -39,3 +39,4 @@ frontend/capture.tmp.mjs
 .impeccable/review/
 frontend/*.tsbuildinfo
 frontend/dist/
+frontend/*.tmp.mjs

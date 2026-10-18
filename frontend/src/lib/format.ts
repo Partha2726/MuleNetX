@@ -61,5 +61,5 @@ export function shortId(id: string | null | undefined, n = 8): string {
 
 export function humanize(code: string | null | undefined): string {
   if (!code) return "—";
-  return code.charAt(0) + code.slice(1).toLowerCase().replaceAll("_", " ");
+  return code.charAt(0).toUpperCase() + code.slice(1).toLowerCase().replaceAll("_", " ");
 }

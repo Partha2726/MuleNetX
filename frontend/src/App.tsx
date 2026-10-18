@@ -16,6 +16,8 @@ import { GraphExplorer } from "./pages/GraphExplorer";
 import { Login } from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
 import { PathView } from "./pages/PathView";
+import { RingWorkspace } from "./pages/RingWorkspace";
+import { Rings } from "./pages/Rings";
 import { Triage } from "./pages/Triage";
 import type { Role } from "./api/types";
 import { useSession } from "./state/session";
@@ -51,6 +53,8 @@ export function App() {
         <Route path="paths" element={<PathView />} />
         <Route path="communities" element={<Communities />} />
         <Route path="communities/:id" element={<CommunityDetail />} />
+        <Route path="rings" element={<Rings />} />
+        <Route path="rings/:id" element={<RingWorkspace />} />
         <Route path="cases" element={<Cases />} />
         <Route path="cases/:id" element={<CaseDetail />} />
         <Route path="admin/ingestion" element={<Ingestion />} />

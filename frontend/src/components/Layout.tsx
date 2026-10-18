@@ -11,6 +11,7 @@ import {
   Search,
   Users,
   Workflow,
+  Waypoints,
   Cpu,
   Menu,
   X,
@@ -40,6 +41,7 @@ const WORK: NavDef[] = [
   { to: "/graph", label: "Graph explorer", icon: Network },
   { to: "/paths", label: "Money flow", icon: Route },
   { to: "/communities", label: "Communities", icon: Boxes },
+  { to: "/rings", label: "Rings", icon: Waypoints },
   { to: "/cases", label: "Cases", icon: FolderKanban },
 ];
 

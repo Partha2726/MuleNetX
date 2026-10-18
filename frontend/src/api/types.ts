@@ -38,6 +38,15 @@ export type Model = S["ModelOut"];
 export type Profile = S["ProfileOut"];
 export type AuditEvent = S["AuditEventOut"];
 export type ErrorEnvelope = S["ErrorEnvelope"];
+export type Motif = S["MotifOut"];
+export type MotifPage = S["MotifPage"];
+export type Ring = S["RingOut"];
+export type RingPage = S["RingPage"];
+export type RingMemberPage = S["RingMemberPage"];
+export type RingTransactionPage = S["RingTransactionPage"];
+export type RingFeatures = S["RingFeaturesOut"];
+export type RingRisk = S["RingRiskOut"];
+export type RingEvidence = S["RingEvidenceOut"];
 
 export interface Page<T> {
   items: T[];

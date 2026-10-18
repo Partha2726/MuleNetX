@@ -6,7 +6,9 @@ import { ApiError } from "../api/client";
 import { communityService } from "../api/graph";
 import { riskService } from "../api/risk";
 import type { Assessment, FeatureValue, Shap, Transaction } from "../api/types";
+import { motifService } from "../api/rings";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
+import { MotifPanel } from "../components/MotifPanel";
 import { AccountLink, Paginator, ScoreBar, TierChip } from "../components/bits";
 import { Decomposition } from "../components/Decomposition";
 import { EvidenceLabel } from "../components/EvidenceLabel";
@@ -24,6 +26,7 @@ const TABS = [
   ["transactions", "Transactions"],
   ["features", "Features"],
   ["temporal", "Temporal"],
+  ["motifs", "Motifs"],
   ["community", "Community"],
 ] as const;
 type Tab = (typeof TABS)[number][0];
@@ -476,6 +479,7 @@ export function AccountWorkspace() {
               {tab === "features" && <FeaturesTab id={a.account_id} />}
               {tab === "temporal" && <TemporalTab id={a.account_id} />}
               {tab === "community" && <CommunityTab id={a.account_id} />}
+              {tab === "motifs" && <MotifPanel load={(q, sig) => motifService.ofAccount(a.account_id, q, sig)} deps={[a.account_id]} />}
             </div>
           </>
         )}
