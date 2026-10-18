@@ -98,11 +98,13 @@ def _missing(udt: str, n: int) -> Any:
     return uuid.uuid4() if udt == "uuid" else f"missing:{n}"
 
 
-def test_all_36_tables_have_factories() -> None:
+def test_AT_OPS_06_all_36_tables_have_factories() -> None:
     assert sorted(FACTORIES) == sorted(schema_check.parse_srs())
 
 
-def test_primary_and_unique_constraints_reject_duplicates(conn: psycopg.Connection[Any], constraints: Any) -> None:
+def test_AT_OPS_06_primary_and_unique_constraints_reject_duplicates(
+    conn: psycopg.Connection[Any], constraints: Any
+) -> None:
     f = Fresh(conn)
     checked = 0
     keys = {(t, n): c for t, n, k, c, _ in constraints if k in ("p", "u")}
@@ -127,7 +129,7 @@ def test_primary_and_unique_constraints_reject_duplicates(conn: psycopg.Connecti
     assert checked >= 40
 
 
-def test_foreign_keys_reject_missing_parents(conn: psycopg.Connection[Any], constraints: Any) -> None:
+def test_AT_OPS_06_foreign_keys_reject_missing_parents(conn: psycopg.Connection[Any], constraints: Any) -> None:
     f = Fresh(conn)
     fks: dict[str, list[tuple[str, list[str]]]] = {}
     for table, name, kind, cols, _ in constraints:
@@ -168,7 +170,7 @@ CANDIDATES_BY_TYPE: dict[str, list[Any]] = {
 }
 
 
-def test_check_constraints_reject_invalid_values(conn: psycopg.Connection[Any], constraints: Any) -> None:
+def test_AT_OPS_06_check_constraints_reject_invalid_values(conn: psycopg.Connection[Any], constraints: Any) -> None:
     f = Fresh(conn)
     checked = 0
     for table, name, kind, cols, _ in constraints:
@@ -201,7 +203,7 @@ def test_check_constraints_reject_invalid_values(conn: psycopg.Connection[Any], 
     assert checked >= 100
 
 
-def test_srs_declared_constraints_exist(constraints: Any) -> None:
+def test_AT_OPS_06_srs_declared_constraints_exist(constraints: Any) -> None:
     """Every column whose SRS §6.3 constraint cell names an FK, UNIQUE, PK or CHECK is covered, and every
     table-level PK/UNIQUE written in the SRS prose exists with exactly those columns."""
     by_table: dict[str, dict[str, list[set[str]]]] = {}
@@ -288,7 +290,7 @@ def _changed_expr(udt: str, col: str) -> str:
     }[udt]
 
 
-def test_immutable_columns_reject_updates(conn: psycopg.Connection[Any]) -> None:
+def test_AT_OPS_06_immutable_columns_reject_updates(conn: psycopg.Connection[Any]) -> None:
     f = Fresh(conn)
     spec = schema_check.parse_srs()
     checked = 0
@@ -311,7 +313,7 @@ def test_immutable_columns_reject_updates(conn: psycopg.Connection[Any]) -> None
     assert checked > 300
 
 
-def test_once_columns_change_only_from_null(conn: psycopg.Connection[Any]) -> None:
+def test_AT_OPS_06_once_columns_change_only_from_null(conn: psycopg.Connection[Any]) -> None:
     f = Fresh(conn)
     with conn.transaction():
         g = f.make("graph_snapshots", status="VALIDATING")
@@ -330,7 +332,7 @@ def test_once_columns_change_only_from_null(conn: psycopg.Connection[Any]) -> No
         conn.execute("UPDATE users SET role = 'ADMIN', is_active = FALSE WHERE user_id = %s", (u["user_id"],))
 
 
-def test_app_role_cannot_update_or_delete_append_only(conn: psycopg.Connection[Any]) -> None:
+def test_AT_OPS_06_app_role_cannot_update_or_delete_append_only(conn: psycopg.Connection[Any]) -> None:
     f = Fresh(conn)
     with conn.transaction():
         for table in APPEND_ONLY:
@@ -346,7 +348,7 @@ def test_app_role_cannot_update_or_delete_append_only(conn: psycopg.Connection[A
             app.execute(f'SELECT count(*) FROM "{table}"').fetchone()
 
 
-def test_purge_function_guards_succeeded_runs(conn: psycopg.Connection[Any]) -> None:
+def test_AT_OPS_06_purge_function_guards_succeeded_runs(conn: psycopg.Connection[Any]) -> None:
     f = Fresh(conn)
     with conn.transaction():
         ra = f.make("risk_assessments")
@@ -364,7 +366,7 @@ def test_purge_function_guards_succeeded_runs(conn: psycopg.Connection[Any]) -> 
         app.execute("SELECT purge_scoring_outputs(%s)", (ra2["scoring_run_id"],))
 
 
-def test_feature_snapshot_after_cutoff_rejected_by_database(conn: psycopg.Connection[Any]) -> None:
+def test_AT_OPS_06_feature_snapshot_after_cutoff_rejected_by_database(conn: psycopg.Connection[Any]) -> None:
     f = Fresh(conn)
     with conn.transaction():
         row = f.build("account_feature_values")

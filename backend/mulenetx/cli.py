@@ -141,12 +141,24 @@ def cmd_export_openapi(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_export_errors(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    from mulenetx.core.error_codes import catalogue_markdown
+
+    path = Path(args.out)
+    path.write_text(catalogue_markdown())
+    print(f"wrote {path}")
+    return 0
+
+
 COMMANDS: dict[str, tuple[Callable[[argparse.Namespace], int], str]] = {
     "ingest": (cmd_ingest, "register a server-side CSV (same contract as POST /api/v1/ingestion)"),
     "bootstrap-admin": (cmd_bootstrap_admin, "create the first ADMIN from the environment (refuses if one exists)"),
     "migrate-neo4j": (cmd_migrate_neo4j, "create the Neo4j constraints and indexes (SRS §6.8.1)"),
     "check-schema": (cmd_check_schema, "exit 1 unless the database schema version equals the code head"),
     "export-openapi": (cmd_export_openapi, "write the OpenAPI document (default docs/openapi.json)"),
+    "export-errors": (cmd_export_errors, "write the error catalogue (default docs/api-errors.md)"),
 }
 
 
@@ -166,13 +178,15 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--allow-large", action="store_true")
         if name == "export-openapi":
             p.add_argument("--out", default="../docs/openapi.json")
+        if name == "export-errors":
+            p.add_argument("--out", default="../docs/api-errors.md")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if args.command != "export-openapi":  # the export needs no environment
+    if args.command not in ("export-openapi", "export-errors"):  # the exports need no environment
         configure_logging(get_settings().log_level)
     fn, _ = COMMANDS[args.command]
     return fn(args)
