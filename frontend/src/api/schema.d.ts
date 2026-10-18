@@ -416,6 +416,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/fraud-ring-candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fraud Ring Candidates
+         * @deprecated
+         */
+        get: operations["fraud_ring_candidates_api_v1_fraud_ring_candidates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fraud-ring-candidates/{ring_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fraud Ring Candidate
+         * @deprecated
+         */
+        get: operations["fraud_ring_candidate_api_v1_fraud_ring_candidates__ring_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/graph/metrics": {
         parameters: {
             query?: never;
@@ -645,6 +685,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/rings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Rings */
+        get: operations["list_rings_api_v1_rings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Ring */
+        get: operations["get_ring_api_v1_rings__ring_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ring Accounts */
+        get: operations["ring_accounts_api_v1_rings__ring_id__accounts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ring Evidence */
+        get: operations["ring_evidence_api_v1_rings__ring_id__evidence_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/features": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ring Features */
+        get: operations["ring_features_api_v1_rings__ring_id__features_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/rings/{ring_id}/motifs": {
         parameters: {
             query?: never;
@@ -652,8 +777,62 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Ring Motifs */
+        /**
+         * Ring Motifs
+         * @description Motifs touching any ring member, in the ring's analytics context.
+         */
         get: operations["ring_motifs_api_v1_rings__ring_id__motifs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/risk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ring Risk */
+        get: operations["ring_risk_api_v1_rings__ring_id__risk_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch Status */
+        patch: operations["patch_status_api_v1_rings__ring_id__status_patch"];
+        trace?: never;
+    };
+    "/api/v1/rings/{ring_id}/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ring Transactions */
+        get: operations["ring_transactions_api_v1_rings__ring_id__transactions_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1596,6 +1775,21 @@ export interface components {
             /** Total Is Capped */
             total_is_capped: boolean;
         };
+        /** PageOf[dict[str, Any]] */
+        PageOf_dict_str__Any__: {
+            /** Items */
+            items: {
+                [key: string]: unknown;
+            }[];
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Total */
+            total: number;
+            /** Total Is Capped */
+            total_is_capped: boolean;
+        };
         /** PathDetailOut */
         PathDetailOut: {
             /** Accounts */
@@ -1822,6 +2016,267 @@ export interface components {
              */
             status: "READY" | "NOT_READY";
         };
+        /** RingComponent */
+        RingComponent: {
+            /** Availability */
+            availability: string | null;
+            /** Component */
+            component: string;
+            /** Value */
+            value: number;
+            /** Weight */
+            weight: number;
+        };
+        /** RingEvidenceOut */
+        RingEvidenceOut: {
+            /** Component Availability */
+            component_availability: {
+                [key: string]: string;
+            };
+            /** Components */
+            components: {
+                [key: string]: string;
+            };
+            /** Computed At */
+            computed_at: string | null;
+            /** Feature Availability */
+            feature_availability: {
+                [key: string]: string;
+            };
+            /** Features */
+            features: {
+                [key: string]: string;
+            };
+            /** Is Stale */
+            is_stale: boolean;
+            lineage: components["schemas"]["LineageOut"];
+            /** Ring Id */
+            ring_id: string;
+            /** Ring Risk Score */
+            ring_risk_score: string;
+            /** Risk Tier */
+            risk_tier: string;
+            /** Scope */
+            scope: {
+                [key: string]: unknown;
+            };
+            /** Sections */
+            sections: {
+                [key: string]: components["schemas"]["PageOf_dict_str__Any__"];
+            };
+            /** Source Community */
+            source_community: {
+                [key: string]: string;
+            };
+            /** Statement */
+            statement: string;
+            /** Versions */
+            versions: {
+                [key: string]: unknown;
+            };
+        };
+        /** RingFeature */
+        RingFeature: {
+            /** Availability */
+            availability: string | null;
+            /** Feature */
+            feature: string;
+            /** Name */
+            name: string;
+            /** Value */
+            value: number;
+        };
+        /** RingFeaturesOut */
+        RingFeaturesOut: {
+            /** Computed At */
+            computed_at: string | null;
+            /** Eligible Path Count */
+            eligible_path_count: number;
+            /** End Time */
+            end_time: string | null;
+            /** Enumeration Counters */
+            enumeration_counters: {
+                [key: string]: unknown;
+            };
+            /** Feature Version */
+            feature_version: string;
+            /** Features */
+            features: components["schemas"]["RingFeature"][];
+            /** Is Stale */
+            is_stale: boolean;
+            lineage: components["schemas"]["LineageOut"];
+            /** Paths Truncated */
+            paths_truncated: boolean;
+            /** Qualifying Path Count */
+            qualifying_path_count: number;
+            /** Ring Feature Set Id */
+            ring_feature_set_id: string;
+            /** Ring Id */
+            ring_id: string;
+            /** Ring Size */
+            ring_size: number;
+            /** Start Time */
+            start_time: string | null;
+            /** Temporal Span Seconds */
+            temporal_span_seconds: number;
+            /** Transaction Count */
+            transaction_count: number;
+        };
+        /** RingMember */
+        RingMember: {
+            /** Account Id */
+            account_id: string;
+            /** Account Type */
+            account_type: string | null;
+            /** Final Score */
+            final_score: number | null;
+            /** Risk Tier */
+            risk_tier: string | null;
+            /** Source Account Ref */
+            source_account_ref: string | null;
+        };
+        /** RingMemberPage */
+        RingMemberPage: {
+            /** Computed At */
+            computed_at: string | null;
+            /** Is Stale */
+            is_stale: boolean;
+            /** Items */
+            items: components["schemas"]["RingMember"][];
+            lineage: components["schemas"]["LineageOut"];
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Total */
+            total: number;
+            /** Total Is Capped */
+            total_is_capped: boolean;
+        };
+        /** RingOut */
+        RingOut: {
+            /** Analytics Version */
+            analytics_version: string;
+            /**
+             * Candidate Class
+             * @enum {string}
+             */
+            candidate_class: "SUSPICIOUS_COMMUNITY" | "POTENTIAL_FRAUD_RING_CANDIDATE";
+            /** Candidate Score */
+            candidate_score: number;
+            /**
+             * Candidate Status
+             * @enum {string}
+             */
+            candidate_status: "CANDIDATE" | "REVIEWED" | "DISMISSED";
+            /** Community Id */
+            community_id: string;
+            /** Computed At */
+            computed_at: string | null;
+            /** Created At */
+            created_at: string | null;
+            /** End Time */
+            end_time: string | null;
+            /** Interpretation */
+            interpretation: string;
+            /** Is Stale */
+            is_stale: boolean;
+            lineage: components["schemas"]["LineageOut"];
+            /** Member Count */
+            member_count: number | null;
+            /** Ring Id */
+            ring_id: string;
+            /** Ring Risk Score */
+            ring_risk_score: number | null;
+            /** Ring Risk Tier */
+            ring_risk_tier: string | null;
+            /** Signal Summary */
+            signal_summary: {
+                [key: string]: unknown;
+            };
+            /** Start Time */
+            start_time: string | null;
+            /** Status Changed At */
+            status_changed_at: string | null;
+            /** Status Changed By */
+            status_changed_by: string | null;
+            /** Temporal Span Seconds */
+            temporal_span_seconds: number | null;
+            /** Transaction Count */
+            transaction_count: number | null;
+        };
+        /** RingPage */
+        RingPage: {
+            /** Interpretation */
+            interpretation: string;
+            /** Items */
+            items: components["schemas"]["RingOut"][];
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Total */
+            total: number;
+            /** Total Is Capped */
+            total_is_capped: boolean;
+        };
+        /** RingRiskOut */
+        RingRiskOut: {
+            /** Analytics Version */
+            analytics_version: string;
+            /** Components */
+            components: components["schemas"]["RingComponent"][];
+            /** Computed At */
+            computed_at: string | null;
+            /** Feature Version */
+            feature_version: string;
+            /** Interpretation */
+            interpretation: string;
+            /** Is Stale */
+            is_stale: boolean;
+            lineage: components["schemas"]["LineageOut"];
+            /** Ring Id */
+            ring_id: string;
+            /** Ring Risk Assessment Id */
+            ring_risk_assessment_id: string;
+            /** Ring Risk Score */
+            ring_risk_score: number;
+            /** Risk Logic Version */
+            risk_logic_version: string;
+            /** Risk Tier */
+            risk_tier: string;
+            /** Temporal Indicators */
+            temporal_indicators: {
+                [key: string]: number;
+            };
+        };
+        /** RingTransaction */
+        RingTransaction: {
+            /** Amount */
+            amount: string;
+            /** Destination Account Id */
+            destination_account_id: string;
+            /** Source Account Id */
+            source_account_id: string;
+            /** Timestamp */
+            timestamp: string;
+            /** Transaction Id */
+            transaction_id: string;
+            /** Transaction Type */
+            transaction_type: string;
+        };
+        /** RingTransactionPage */
+        RingTransactionPage: {
+            /** Computed At */
+            computed_at: string | null;
+            /** Is Stale */
+            is_stale: boolean;
+            /** Items */
+            items: components["schemas"]["RingTransaction"][];
+            lineage: components["schemas"]["LineageOut"];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
         /** ShapContribution */
         ShapContribution: {
             /** Direction */
@@ -1883,6 +2338,14 @@ export interface components {
              * Format: uuid
              */
             dataset_id: string;
+        };
+        /** StatusPatch */
+        StatusPatch: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "CANDIDATE" | "REVIEWED" | "DISMISSED";
         };
         /** SubjectCreate */
         SubjectCreate: {
@@ -2968,6 +3431,73 @@ export interface operations {
             };
         };
     };
+    fraud_ring_candidates_api_v1_fraud_ring_candidates_get: {
+        parameters: {
+            query?: {
+                class?: string | null;
+                status?: string | null;
+                min_score?: string | null;
+                scoring_run_id?: string | null;
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingPage"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    fraud_ring_candidate_api_v1_fraud_ring_candidates__ring_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     graph_metrics_api_v1_graph_metrics_get: {
         parameters: {
             query: {
@@ -3465,6 +3995,173 @@ export interface operations {
             };
         };
     };
+    list_rings_api_v1_rings_get: {
+        parameters: {
+            query?: {
+                class?: string | null;
+                status?: string | null;
+                min_score?: string | null;
+                scoring_run_id?: string | null;
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingPage"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    get_ring_api_v1_rings__ring_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    ring_accounts_api_v1_rings__ring_id__accounts_get: {
+        parameters: {
+            query?: {
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingMemberPage"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    ring_evidence_api_v1_rings__ring_id__evidence_get: {
+        parameters: {
+            query?: {
+                section?: string | null;
+                page?: number | null;
+                page_size?: number | null;
+            };
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingEvidenceOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    ring_features_api_v1_rings__ring_id__features_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingFeaturesOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     ring_motifs_api_v1_rings__ring_id__motifs_get: {
         parameters: {
             query?: {
@@ -3489,6 +4186,106 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MotifPage"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    ring_risk_api_v1_rings__ring_id__risk_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingRiskOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    patch_status_api_v1_rings__ring_id__status_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingOut"];
+                };
+            };
+            /** @description Error envelope (SRS §19.3) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    ring_transactions_api_v1_rings__ring_id__transactions_get: {
+        parameters: {
+            query?: {
+                page_size?: number | null;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                ring_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RingTransactionPage"];
                 };
             };
             /** @description Error envelope (SRS §19.3) */

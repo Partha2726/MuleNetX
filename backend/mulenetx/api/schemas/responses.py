@@ -475,6 +475,115 @@ class MotifPage(PageOf[MotifOut], Lineaged):
     interpretation: str
 
 
+class RingOut(Lineaged):
+    ring_id: str
+    candidate_class: Literal["SUSPICIOUS_COMMUNITY", "POTENTIAL_FRAUD_RING_CANDIDATE"]
+    candidate_status: Literal["CANDIDATE", "REVIEWED", "DISMISSED"]
+    candidate_score: float
+    signal_summary: dict[str, Any]
+    community_id: str
+    member_count: int | None
+    transaction_count: int | None
+    start_time: str | None
+    end_time: str | None
+    temporal_span_seconds: int | None
+    ring_risk_score: float | None
+    ring_risk_tier: str | None
+    status_changed_by: str | None
+    status_changed_at: str | None
+    analytics_version: str
+    created_at: str | None
+    interpretation: str
+
+
+class RingPage(PageOf[RingOut]):
+    interpretation: str
+
+
+class RingMember(Out):
+    account_id: str
+    source_account_ref: str | None
+    account_type: str | None
+    final_score: float | None
+    risk_tier: str | None
+
+
+class RingMemberPage(PageOf[RingMember], Lineaged):
+    pass
+
+
+class RingTransaction(Out):
+    transaction_id: str
+    source_account_id: str
+    destination_account_id: str
+    amount: str
+    timestamp: str
+    transaction_type: str
+
+
+class RingTransactionPage(Lineaged):
+    items: list[RingTransaction]
+    next_cursor: str | None
+
+
+class RingFeature(Out):
+    feature: str
+    name: str
+    value: float
+    availability: str | None
+
+
+class RingFeaturesOut(Lineaged):
+    ring_id: str
+    ring_feature_set_id: str
+    feature_version: str
+    ring_size: int
+    transaction_count: int
+    start_time: str | None
+    end_time: str | None
+    temporal_span_seconds: int
+    features: list[RingFeature]
+    eligible_path_count: int
+    qualifying_path_count: int
+    paths_truncated: bool
+    enumeration_counters: dict[str, Any]
+
+
+class RingComponent(Out):
+    component: str
+    value: float
+    weight: float
+    availability: str | None
+
+
+class RingRiskOut(Lineaged):
+    ring_id: str
+    ring_risk_assessment_id: str
+    ring_risk_score: float
+    risk_tier: str
+    components: list[RingComponent]
+    temporal_indicators: dict[str, int]
+    risk_logic_version: str
+    feature_version: str
+    analytics_version: str
+    interpretation: str
+
+
+class RingEvidenceOut(Lineaged):
+    ring_id: str
+    source_community: dict[str, str]
+    statement: str
+    sections: dict[str, PageOf[dict[str, Any]]]
+    scope: dict[str, Any]
+    features: dict[str, str]
+    feature_availability: dict[str, str]
+    components: dict[str, str]
+    component_availability: dict[str, str]
+    ring_risk_score: str
+    risk_tier: str
+    versions: dict[str, Any]
+
+
 # ── cases, audit ────────────────────────────────────────────────────────────
 
 

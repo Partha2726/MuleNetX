@@ -18,6 +18,7 @@ from mulenetx.api.routes import (
     models,
     motifs,
     pipelines,
+    rings,
     users,
 )
 
@@ -35,5 +36,6 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(communities.router)
     app.include_router(cases.router)
     app.include_router(motifs.router)
+    app.include_router(rings.router)
     app.include_router(audit.router)
     app.include_router(aliases.router)

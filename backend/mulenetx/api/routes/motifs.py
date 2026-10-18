@@ -18,6 +18,7 @@ from mulenetx.core.pagination import page_request
 from mulenetx.core.timeutil import parse_utc
 from mulenetx.db.repositories import accounts as account_repo
 from mulenetx.db.repositories import motifs as repo
+from mulenetx.db.repositories import rings as ring_repo
 from mulenetx.motifs.common import MOTIF_TYPES
 
 router = APIRouter(prefix="/api/v1", tags=["motifs"])
@@ -58,13 +59,24 @@ def account_motifs(
 
 @router.get("/rings/{ring_id}/motifs", response_model=MotifPage)
 def ring_motifs(
-    ring_id: str,
+    ring_id: uuid.UUID,
     type: str | None = Query(default=None),  # noqa: A002 - SRS §19.2 parameter name
     start: str | None = Query(default=None),
     end: str | None = Query(default=None),
     page: int | None = Query(default=None),
     page_size: int | None = Query(default=None),
     _p: Principal = Depends(require("motif.read")),
+    db: Session = Depends(get_db),
+    services: Services = Depends(get_services),
 ) -> dict[str, Any]:
-    # Rings are produced from T32; until the ring read model exists (T34) every ring id is unknown.
-    raise AppError(ec.NOT_FOUND, details={"resource": "ring"})
+    """Motifs touching any ring member, in the ring's analytics context."""
+    s = services.runtime.settings
+    req = page_request(page, page_size, s.default_page_size, s.max_page_size)
+    since, until = _time("start", start), _time("end", end)
+    if type is not None and type not in MOTIF_TYPES:
+        raise AppError(ec.VALIDATION_ERROR, details={"field": "type"})
+    if since is not None and until is not None and since > until:
+        raise AppError(ec.VALIDATION_ERROR, details={"field": "start"})
+    c = ring_repo.get_candidate(db, ring_id)
+    members = ring_repo.member_ids(db, c)
+    return repo.list_for_accounts(db, members, c.analytics_run_id, type, since, until, req, s.pagination_count_cap)

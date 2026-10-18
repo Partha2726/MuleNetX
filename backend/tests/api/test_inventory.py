@@ -11,14 +11,6 @@ import pytest
 from tests.openapiutil import SRS, document, norm, operations, srs_aliases, srs_rows
 
 NOT_YET: set[tuple[str, str]] = {
-    ("GET", "/api/v1/rings"),  # T34
-    ("GET", "/api/v1/rings/{id}"),
-    ("PATCH", "/api/v1/rings/{id}/status"),
-    ("GET", "/api/v1/rings/{id}/accounts"),
-    ("GET", "/api/v1/rings/{id}/transactions"),
-    ("GET", "/api/v1/rings/{id}/features"),
-    ("GET", "/api/v1/rings/{id}/risk"),
-    ("GET", "/api/v1/rings/{id}/evidence"),
     ("POST", "/api/v1/rings/{id}/interventions/simulate"),  # T37
     ("GET", "/api/v1/rings/{id}/interventions"),
     ("GET", "/api/v1/interventions/{id}"),
@@ -30,8 +22,6 @@ NOT_YET: set[tuple[str, str]] = {
     ("POST", "/api/v1/copilot/query"),  # T40
 }
 NOT_YET_ALIASES: set[tuple[str, str]] = {
-    ("GET", "/api/v1/fraud-ring-candidates"),  # T34
-    ("GET", "/api/v1/fraud-ring-candidates/{id}"),
     ("GET", "/api/v1/evaluation/summary"),  # T38
     ("GET", "/api/v1/evaluation/{level}"),
 }

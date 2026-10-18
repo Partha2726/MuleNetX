@@ -128,8 +128,21 @@ def test_AT_API_01_every_endpoint(app, client, users) -> None:
     call("GET", "/api/v1/accounts/{id}/shap", f"{a}/shap", 200, params={"assessment_id": risk["assessment_id"]})
     call("GET", "/api/v1/accounts/{id}/community", f"{a}/community", 200)
     call("GET", "/api/v1/accounts/{id}/motifs", f"{a}/motifs", 200)
-    # rings exist from T34; until then every ring id is unknown (documented 404 with the error envelope)
-    call("GET", "/api/v1/rings/{id}/motifs", "/api/v1/rings/00000000-0000-4000-8000-000000000000/motifs", 404)
+
+    rings = call("GET", "/api/v1/rings", "/api/v1/rings", 200, params={"page_size": 100}).json()["items"]
+    pot = next(r for r in rings if r["candidate_class"] == "POTENTIAL_FRAUD_RING_CANDIDATE")["ring_id"]
+    r = f"/api/v1/rings/{pot}"
+    call("GET", "/api/v1/rings/{id}", r, 200)
+    call("GET", "/api/v1/rings/{id}/accounts", f"{r}/accounts", 200)
+    call("GET", "/api/v1/rings/{id}/transactions", f"{r}/transactions", 200)
+    call("GET", "/api/v1/rings/{id}/features", f"{r}/features", 200)
+    call("GET", "/api/v1/rings/{id}/risk", f"{r}/risk", 200)
+    call("GET", "/api/v1/rings/{id}/evidence", f"{r}/evidence", 200, params={"page_size": 5})
+    call("GET", "/api/v1/rings/{id}/motifs", f"{r}/motifs", 200)
+    ring_alias = call("GET", "/api/v1/fraud-ring-candidates", "/api/v1/fraud-ring-candidates", 200)
+    assert ring_alias.headers["deprecation"] == "true"
+    call("GET", "/api/v1/fraud-ring-candidates/{id}", f"/api/v1/fraud-ring-candidates/{pot}", 200)
+    call("PATCH", "/api/v1/rings/{id}/status", f"{r}/status", 200, json={"status": "REVIEWED"})
 
     nb = call(
         "GET", "/api/v1/graph/neighborhood", "/api/v1/graph/neighborhood", 200, params={"account_id": acc, "depth": 2}

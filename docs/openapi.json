@@ -2740,6 +2740,44 @@
         "title": "PageOf[SubjectOut]",
         "type": "object"
       },
+      "PageOf_dict_str__Any__": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_is_capped": {
+            "title": "Total Is Capped",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_is_capped"
+        ],
+        "title": "PageOf[dict[str, Any]]",
+        "type": "object"
+      },
       "PathDetailOut": {
         "additionalProperties": false,
         "properties": {
@@ -3461,6 +3499,838 @@
         "title": "ReadyOut",
         "type": "object"
       },
+      "RingComponent": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Availability"
+          },
+          "component": {
+            "title": "Component",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "component",
+          "value",
+          "weight",
+          "availability"
+        ],
+        "title": "RingComponent",
+        "type": "object"
+      },
+      "RingEvidenceOut": {
+        "additionalProperties": false,
+        "properties": {
+          "component_availability": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Component Availability",
+            "type": "object"
+          },
+          "components": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Components",
+            "type": "object"
+          },
+          "computed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "feature_availability": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Feature Availability",
+            "type": "object"
+          },
+          "features": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Features",
+            "type": "object"
+          },
+          "is_stale": {
+            "title": "Is Stale",
+            "type": "boolean"
+          },
+          "lineage": {
+            "$ref": "#/components/schemas/LineageOut"
+          },
+          "ring_id": {
+            "title": "Ring Id",
+            "type": "string"
+          },
+          "ring_risk_score": {
+            "title": "Ring Risk Score",
+            "type": "string"
+          },
+          "risk_tier": {
+            "title": "Risk Tier",
+            "type": "string"
+          },
+          "scope": {
+            "additionalProperties": true,
+            "title": "Scope",
+            "type": "object"
+          },
+          "sections": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PageOf_dict_str__Any__"
+            },
+            "title": "Sections",
+            "type": "object"
+          },
+          "source_community": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Source Community",
+            "type": "object"
+          },
+          "statement": {
+            "title": "Statement",
+            "type": "string"
+          },
+          "versions": {
+            "additionalProperties": true,
+            "title": "Versions",
+            "type": "object"
+          }
+        },
+        "required": [
+          "lineage",
+          "computed_at",
+          "is_stale",
+          "ring_id",
+          "source_community",
+          "statement",
+          "sections",
+          "scope",
+          "features",
+          "feature_availability",
+          "components",
+          "component_availability",
+          "ring_risk_score",
+          "risk_tier",
+          "versions"
+        ],
+        "title": "RingEvidenceOut",
+        "type": "object"
+      },
+      "RingFeature": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Availability"
+          },
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "feature",
+          "name",
+          "value",
+          "availability"
+        ],
+        "title": "RingFeature",
+        "type": "object"
+      },
+      "RingFeaturesOut": {
+        "additionalProperties": false,
+        "properties": {
+          "computed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "eligible_path_count": {
+            "title": "Eligible Path Count",
+            "type": "integer"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Time"
+          },
+          "enumeration_counters": {
+            "additionalProperties": true,
+            "title": "Enumeration Counters",
+            "type": "object"
+          },
+          "feature_version": {
+            "title": "Feature Version",
+            "type": "string"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/RingFeature"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "is_stale": {
+            "title": "Is Stale",
+            "type": "boolean"
+          },
+          "lineage": {
+            "$ref": "#/components/schemas/LineageOut"
+          },
+          "paths_truncated": {
+            "title": "Paths Truncated",
+            "type": "boolean"
+          },
+          "qualifying_path_count": {
+            "title": "Qualifying Path Count",
+            "type": "integer"
+          },
+          "ring_feature_set_id": {
+            "title": "Ring Feature Set Id",
+            "type": "string"
+          },
+          "ring_id": {
+            "title": "Ring Id",
+            "type": "string"
+          },
+          "ring_size": {
+            "title": "Ring Size",
+            "type": "integer"
+          },
+          "start_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Time"
+          },
+          "temporal_span_seconds": {
+            "title": "Temporal Span Seconds",
+            "type": "integer"
+          },
+          "transaction_count": {
+            "title": "Transaction Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "lineage",
+          "computed_at",
+          "is_stale",
+          "ring_id",
+          "ring_feature_set_id",
+          "feature_version",
+          "ring_size",
+          "transaction_count",
+          "start_time",
+          "end_time",
+          "temporal_span_seconds",
+          "features",
+          "eligible_path_count",
+          "qualifying_path_count",
+          "paths_truncated",
+          "enumeration_counters"
+        ],
+        "title": "RingFeaturesOut",
+        "type": "object"
+      },
+      "RingMember": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "account_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Account Type"
+          },
+          "final_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Final Score"
+          },
+          "risk_tier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Tier"
+          },
+          "source_account_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Account Ref"
+          }
+        },
+        "required": [
+          "account_id",
+          "source_account_ref",
+          "account_type",
+          "final_score",
+          "risk_tier"
+        ],
+        "title": "RingMember",
+        "type": "object"
+      },
+      "RingMemberPage": {
+        "additionalProperties": false,
+        "properties": {
+          "computed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "is_stale": {
+            "title": "Is Stale",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RingMember"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "lineage": {
+            "$ref": "#/components/schemas/LineageOut"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_is_capped": {
+            "title": "Total Is Capped",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "lineage",
+          "computed_at",
+          "is_stale",
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_is_capped"
+        ],
+        "title": "RingMemberPage",
+        "type": "object"
+      },
+      "RingOut": {
+        "additionalProperties": false,
+        "properties": {
+          "analytics_version": {
+            "title": "Analytics Version",
+            "type": "string"
+          },
+          "candidate_class": {
+            "enum": [
+              "SUSPICIOUS_COMMUNITY",
+              "POTENTIAL_FRAUD_RING_CANDIDATE"
+            ],
+            "title": "Candidate Class",
+            "type": "string"
+          },
+          "candidate_score": {
+            "title": "Candidate Score",
+            "type": "number"
+          },
+          "candidate_status": {
+            "enum": [
+              "CANDIDATE",
+              "REVIEWED",
+              "DISMISSED"
+            ],
+            "title": "Candidate Status",
+            "type": "string"
+          },
+          "community_id": {
+            "title": "Community Id",
+            "type": "string"
+          },
+          "computed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Time"
+          },
+          "interpretation": {
+            "title": "Interpretation",
+            "type": "string"
+          },
+          "is_stale": {
+            "title": "Is Stale",
+            "type": "boolean"
+          },
+          "lineage": {
+            "$ref": "#/components/schemas/LineageOut"
+          },
+          "member_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Member Count"
+          },
+          "ring_id": {
+            "title": "Ring Id",
+            "type": "string"
+          },
+          "ring_risk_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ring Risk Score"
+          },
+          "ring_risk_tier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ring Risk Tier"
+          },
+          "signal_summary": {
+            "additionalProperties": true,
+            "title": "Signal Summary",
+            "type": "object"
+          },
+          "start_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Time"
+          },
+          "status_changed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status Changed At"
+          },
+          "status_changed_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status Changed By"
+          },
+          "temporal_span_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temporal Span Seconds"
+          },
+          "transaction_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transaction Count"
+          }
+        },
+        "required": [
+          "lineage",
+          "computed_at",
+          "is_stale",
+          "ring_id",
+          "candidate_class",
+          "candidate_status",
+          "candidate_score",
+          "signal_summary",
+          "community_id",
+          "member_count",
+          "transaction_count",
+          "start_time",
+          "end_time",
+          "temporal_span_seconds",
+          "ring_risk_score",
+          "ring_risk_tier",
+          "status_changed_by",
+          "status_changed_at",
+          "analytics_version",
+          "created_at",
+          "interpretation"
+        ],
+        "title": "RingOut",
+        "type": "object"
+      },
+      "RingPage": {
+        "additionalProperties": false,
+        "properties": {
+          "interpretation": {
+            "title": "Interpretation",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RingOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_is_capped": {
+            "title": "Total Is Capped",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_is_capped",
+          "interpretation"
+        ],
+        "title": "RingPage",
+        "type": "object"
+      },
+      "RingRiskOut": {
+        "additionalProperties": false,
+        "properties": {
+          "analytics_version": {
+            "title": "Analytics Version",
+            "type": "string"
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/RingComponent"
+            },
+            "title": "Components",
+            "type": "array"
+          },
+          "computed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "feature_version": {
+            "title": "Feature Version",
+            "type": "string"
+          },
+          "interpretation": {
+            "title": "Interpretation",
+            "type": "string"
+          },
+          "is_stale": {
+            "title": "Is Stale",
+            "type": "boolean"
+          },
+          "lineage": {
+            "$ref": "#/components/schemas/LineageOut"
+          },
+          "ring_id": {
+            "title": "Ring Id",
+            "type": "string"
+          },
+          "ring_risk_assessment_id": {
+            "title": "Ring Risk Assessment Id",
+            "type": "string"
+          },
+          "ring_risk_score": {
+            "title": "Ring Risk Score",
+            "type": "number"
+          },
+          "risk_logic_version": {
+            "title": "Risk Logic Version",
+            "type": "string"
+          },
+          "risk_tier": {
+            "title": "Risk Tier",
+            "type": "string"
+          },
+          "temporal_indicators": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Temporal Indicators",
+            "type": "object"
+          }
+        },
+        "required": [
+          "lineage",
+          "computed_at",
+          "is_stale",
+          "ring_id",
+          "ring_risk_assessment_id",
+          "ring_risk_score",
+          "risk_tier",
+          "components",
+          "temporal_indicators",
+          "risk_logic_version",
+          "feature_version",
+          "analytics_version",
+          "interpretation"
+        ],
+        "title": "RingRiskOut",
+        "type": "object"
+      },
+      "RingTransaction": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          },
+          "destination_account_id": {
+            "title": "Destination Account Id",
+            "type": "string"
+          },
+          "source_account_id": {
+            "title": "Source Account Id",
+            "type": "string"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "transaction_id": {
+            "title": "Transaction Id",
+            "type": "string"
+          },
+          "transaction_type": {
+            "title": "Transaction Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "transaction_id",
+          "source_account_id",
+          "destination_account_id",
+          "amount",
+          "timestamp",
+          "transaction_type"
+        ],
+        "title": "RingTransaction",
+        "type": "object"
+      },
+      "RingTransactionPage": {
+        "additionalProperties": false,
+        "properties": {
+          "computed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "is_stale": {
+            "title": "Is Stale",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RingTransaction"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "lineage": {
+            "$ref": "#/components/schemas/LineageOut"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "lineage",
+          "computed_at",
+          "is_stale",
+          "items",
+          "next_cursor"
+        ],
+        "title": "RingTransactionPage",
+        "type": "object"
+      },
       "ShapContribution": {
         "additionalProperties": false,
         "properties": {
@@ -3624,6 +4494,25 @@
           "dataset_id"
         ],
         "title": "StartPipeline",
+        "type": "object"
+      },
+      "StatusPatch": {
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "enum": [
+              "CANDIDATE",
+              "REVIEWED",
+              "DISMISSED"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "StatusPatch",
         "type": "object"
       },
       "SubjectCreate": {
@@ -6141,6 +7030,183 @@
         "x-permission": "ingestion.read"
       }
     },
+    "/api/v1/fraud-ring-candidates": {
+      "get": {
+        "deprecated": true,
+        "operationId": "fraud_ring_candidates_api_v1_fraud_ring_candidates_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "class",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Class"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "min_score",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Min Score"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scoring_run_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scoring Run Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Fraud Ring Candidates",
+        "tags": [
+          "aliases"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/fraud-ring-candidates/{ring_id}": {
+      "get": {
+        "deprecated": true,
+        "operationId": "fraud_ring_candidate_api_v1_fraud_ring_candidates__ring_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Fraud Ring Candidate",
+        "tags": [
+          "aliases"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
     "/api/v1/graph/metrics": {
       "get": {
         "operationId": "graph_metrics_api_v1_graph_metrics_get",
@@ -7151,8 +8217,396 @@
         "x-permission": "pipeline.control"
       }
     },
+    "/api/v1/rings": {
+      "get": {
+        "operationId": "list_rings_api_v1_rings_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "class",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Class"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "min_score",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Min Score"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scoring_run_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scoring Run Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "List Rings",
+        "tags": [
+          "rings"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/rings/{ring_id}": {
+      "get": {
+        "operationId": "get_ring_api_v1_rings__ring_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Get Ring",
+        "tags": [
+          "rings"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/rings/{ring_id}/accounts": {
+      "get": {
+        "operationId": "ring_accounts_api_v1_rings__ring_id__accounts_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingMemberPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Ring Accounts",
+        "tags": [
+          "rings"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/rings/{ring_id}/evidence": {
+      "get": {
+        "operationId": "ring_evidence_api_v1_rings__ring_id__evidence_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "section",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Section"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingEvidenceOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Ring Evidence",
+        "tags": [
+          "rings"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/rings/{ring_id}/features": {
+      "get": {
+        "operationId": "ring_features_api_v1_rings__ring_id__features_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingFeaturesOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Ring Features",
+        "tags": [
+          "rings"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
     "/api/v1/rings/{ring_id}/motifs": {
       "get": {
+        "description": "Motifs touching any ring member, in the ring's analytics context.",
         "operationId": "ring_motifs_api_v1_rings__ring_id__motifs_get",
         "parameters": [
           {
@@ -7160,6 +8614,7 @@
             "name": "ring_id",
             "required": true,
             "schema": {
+              "format": "uuid",
               "title": "Ring Id",
               "type": "string"
             }
@@ -7272,6 +8727,180 @@
           "motifs"
         ],
         "x-permission": "motif.read"
+      }
+    },
+    "/api/v1/rings/{ring_id}/risk": {
+      "get": {
+        "operationId": "ring_risk_api_v1_rings__ring_id__risk_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingRiskOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Ring Risk",
+        "tags": [
+          "rings"
+        ],
+        "x-permission": "ring.read"
+      }
+    },
+    "/api/v1/rings/{ring_id}/status": {
+      "patch": {
+        "operationId": "patch_status_api_v1_rings__ring_id__status_patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Patch Status",
+        "tags": [
+          "rings"
+        ],
+        "x-permission": "ring.review"
+      }
+    },
+    "/api/v1/rings/{ring_id}/transactions": {
+      "get": {
+        "operationId": "ring_transactions_api_v1_rings__ring_id__transactions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ring_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Ring Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Size"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RingTransactionPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Error envelope (SRS \u00a719.3)"
+          }
+        },
+        "summary": "Ring Transactions",
+        "tags": [
+          "rings"
+        ],
+        "x-permission": "ring.read"
       }
     },
     "/api/v1/users": {
